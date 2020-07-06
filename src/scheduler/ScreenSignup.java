@@ -16,7 +16,7 @@ public class ScreenSignup {
 
     TextField firstNameTextField = new TextField();
     TextField lastNameTextField = new TextField();
-    TextField userNameTextField = new TextField();
+    TextField emailTextField = new TextField();
     PasswordField passwordField = new PasswordField();
 
     public void run(Stage primaryStage) {
@@ -44,9 +44,9 @@ public class ScreenSignup {
         grid.add(lastNameTextField, 1, 2);
 
         // Add username text field and label
-        Label usernameLabel = new Label("Email");
-        grid.add(usernameLabel, 0, 3);
-        grid.add(userNameTextField, 1, 3);
+        Label emailLabel = new Label("Email");
+        grid.add(emailLabel, 0, 3);
+        grid.add(emailTextField, 1, 3);
 
         // Add password field and label
         Label passwordLabel = new Label("Password");
@@ -58,7 +58,20 @@ public class ScreenSignup {
         signUpButton.setMaxWidth(Double.MAX_VALUE);
         signUpButton.setStyle(Constants.BUTTON_STYLE);
         signUpButton.setOnAction((ActionEvent e) -> {
-            System.out.println("Run the backend methods");
+            String email = emailTextField.getText();
+            String password = passwordField.getText();
+            boolean didRegister = Firebase.doSignUp(email, password);
+            if (didRegister) {
+                String firstName = firstNameTextField.getText();
+                String lastName = lastNameTextField.getText();
+                System.out.println("Successfully registered" + email + "\nNeed to get the UID, create DB entry using UID, "
+                        + "add firstName (" + firstName + ") and last name (" + lastName + ") to the DB entry");
+                //After name is submitted to the new DB entry, should fetch the name and welcome the user
+                //Then go to the next screen. Dashboard screen maybe?                
+            } else {
+                System.out.println("Oof. Failed to register " + email + ". Should alert the user here.");
+            }
+
         });
         grid.add(signUpButton, 0, 5, 2, 1);
         GridPane.setFillWidth(signUpButton, true);

@@ -139,4 +139,10 @@ public class Firebase {
         return result <= 200; //get the bool, return it in one line
     }
 
+    public static boolean doSignUp(String email, String password) {
+        String payload = buildCredentialsPayload(email, password);
+        int result = sendPost(SIGN_UP, payload);
+        return result <= 200; //get the bool, return it in one line
+    }
+
 }
