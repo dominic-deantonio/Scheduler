@@ -58,6 +58,8 @@ public class ScreenSignup {
         signUpButton.setMaxWidth(Double.MAX_VALUE);
         signUpButton.setStyle(Constants.BUTTON_STYLE);
         signUpButton.setOnAction((ActionEvent e) -> {
+
+            //This should probably be turned into a function
             String email = emailTextField.getText();
             String password = passwordField.getText();
             boolean didRegister = Firebase.doSignUp(email, password);
