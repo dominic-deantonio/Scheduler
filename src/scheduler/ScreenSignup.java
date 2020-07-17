@@ -1,5 +1,6 @@
 package scheduler;
 
+import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -56,7 +57,7 @@ public class ScreenSignup {
         // Add submit button - color, allow stretch, set method
         Button signUpButton = new Button("Submit");
         signUpButton.setMaxWidth(Double.MAX_VALUE);
-        signUpButton.setStyle(Constants.BUTTON_STYLE);
+        signUpButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
         signUpButton.setOnAction((ActionEvent e) -> {
 
             //This should probably be turned into a function

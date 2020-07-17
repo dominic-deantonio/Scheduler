@@ -19,7 +19,7 @@ public class ScreenWelcome {
     TextField firstName = new TextField();
 
 
-    public void run(Stage primaryStage) {
+    public void run(Stage primaryStage, User user) {
         Log.log("running sign up screen");
 
         GridPane grid = new GridPane();

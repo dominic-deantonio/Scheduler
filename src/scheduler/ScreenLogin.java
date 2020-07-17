@@ -1,5 +1,6 @@
 package scheduler;
 
+import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -45,7 +46,7 @@ public class ScreenLogin {
         // Add login button - color, allow stretch, set method
         Button loginButton = new Button("Log In");
         loginButton.setMaxWidth(Double.MAX_VALUE);
-        loginButton.setStyle(Constants.BUTTON_STYLE);
+        loginButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
         loginButton.setOnAction((ActionEvent e) -> {
             System.out.println("Run the backend methods");
             String email = emailTextField.getText();
