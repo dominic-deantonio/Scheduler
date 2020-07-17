@@ -2,7 +2,7 @@
 //Class: UMUC SDEV 425 6380
 //Date: 9 February 2020
 
-package scheduler;
+package scheduler.models;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;

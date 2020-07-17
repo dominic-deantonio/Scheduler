@@ -1,5 +1,6 @@
 package scheduler;
 
+import scheduler.models.User;
 import scheduler.utilities.Constants;
 import javafx.application.Application;
 import javafx.scene.Scene;
