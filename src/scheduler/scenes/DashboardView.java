@@ -35,7 +35,6 @@ public class DashboardView extends BorderPane {
                 new Button("Placeholder 2"),
                 new Button("Placeholder 3"),
                 new Button("Placeholder 4"),
-                new Button("Placeholder 5"),
                 new Button("Options"),
                 logoutButton
         );
