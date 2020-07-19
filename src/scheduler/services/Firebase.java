@@ -28,7 +28,8 @@ public class Firebase {
 
     private static HttpURLConnection connection;
 
-    public static String fetch(String urlString) {
+    
+    public static String get(String urlString) {
         BufferedReader reader;
         String line;
         StringBuilder responseContent = new StringBuilder();
@@ -53,9 +54,11 @@ public class Firebase {
             } else {
                 //Successful
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
+            }
+            
+            //Write the stream contents to the reponse
+            while ((line = reader.readLine()) != null) {
+                responseContent.append(line);
             }
             reader.close();
 
@@ -121,28 +124,22 @@ public class Firebase {
         return status;
     }
 
-    // Used for login and signup
+    // Creates JSON payloard for signing in and signing up
     public static String buildCredentialsPayload(String email, String password) {
         return "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
     }
 
-//    public static Gson getUsersList() {
-//        Gson json = new GsonBuilder().create();
-//        String response = getDataFromFirebase();
-//        Gson value = json.fromJson(response, String.class);
-//        
-//        return value;
-//    }
-    public static boolean doLogin(String email, String password) {
+    
+    public static boolean sendLoginRequest(String email, String password) {
         String payload = buildCredentialsPayload(email, password);
         int result = sendPost(SIGN_IN, payload);
-        return result <= 200; //get the bool, return it in one line
+        return result <= 200; //returns true if connection successful
     }
 
-    public static boolean doSignUp(String email, String password) {
+    public static boolean sendSignupRequest(String email, String password) {
         String payload = buildCredentialsPayload(email, password);
         int result = sendPost(SIGN_UP, payload);
-        return result <= 200; //get the bool, return it in one line
+        return result <= 200; //returns true if connection successful
     }
 
 }

@@ -1,18 +1,15 @@
 //Author: Dominic DeAntonio
 //Class: UMUC SDEV 425 6380
 //Date: 9 February 2020
-
 package scheduler.models;
-
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 //Simple class to represent a user
 public class User {
-        
-    public String name;
+
+    private String firstName;
+    private String lastName;
+
+    /*
     public String lockoutTime = "0";
     public String email;
     
@@ -79,5 +76,5 @@ public class User {
             return null;
         }
     }
-   
+     */
 }
