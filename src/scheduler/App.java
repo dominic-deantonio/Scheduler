@@ -1,6 +1,5 @@
 package scheduler;
 
-import scheduler.models.User;
 import scheduler.utilities.Constants;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,8 +10,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage mainWindow) {
-        User user = new User();
-
         LoginView loginView = new LoginView(mainWindow);
 
         //Set up the main window

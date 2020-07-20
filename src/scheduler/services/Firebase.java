@@ -8,28 +8,41 @@ package scheduler.services;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
+//There is no need to instantiate new Firebase classes, so this is a singleton
 public class Firebase {
 
-    public static final String API_KEY = "AIzaSyDAEG_Ynr-ewIov3Au1YUlR9breoQhXFHQ";
-    public static final String AUTH_DOMAIN = "scheduler-cmsc.firebaseapp.com";
-    public static final String DATABASE_URL = "https://scheduler-cmsc.firebaseio.com";
-    public static final String PROJECT_ID = "scheduler-cmsc";
-    public static final String STORAGE_BUCKET = "scheduler-cmsc.appspot.com";
-    public static final String MESSAGING_SENDER_ID = "176621522738";
-    public static final String APP_ID = "1:176621522738:web:ae75cf4dccb07b9a86112b";
-    public static final String MEASUREMENT_ID = "G-H2P33184SZ";
+    //Firebase should be accessed by the getInstance
+    private static Firebase instance;
 
-    public static final String USERS = "https://scheduler-cmsc.firebaseio.com/users.json";
-    public static final String SIGN_UP = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + API_KEY;
-    public static final String SIGN_IN = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + API_KEY;
+    //Private constructor prevents more instances
+    private Firebase() {
+    }
 
-    private static HttpURLConnection connection;
+    //Access the instance only through this getter
+    public static Firebase getInstance() {
+        instance = instance == null ? new Firebase() : instance; //Look up ternary operators if confused
+        return instance;
+    }
 
-    
-    public static String get(String urlString) {
+    //Class variables - might remove many if not necessary
+    //Some of these values like api key should not be saved in the app itself. Major security risk
+    private final String API_KEY = "AIzaSyDAEG_Ynr-ewIov3Au1YUlR9breoQhXFHQ";
+    private final String AUTH_DOMAIN = "scheduler-cmsc.firebaseapp.com";
+    private final String PROJECT_ID = "scheduler-cmsc";
+    private final String STORAGE_BUCKET = "scheduler-cmsc.appspot.com";
+    private final String MESSAGING_SENDER_ID = "176621522738";
+    private final String APP_ID = "1:176621522738:web:ae75cf4dccb07b9a86112b";
+    private final String MEASUREMENT_ID = "G-H2P33184SZ";
+    private final String DB_ENDPOINT = "https://scheduler-cmsc.firebaseio.com/";
+    private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
+    private final String SIGN_UP_URL = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
+    private final String SIGN_IN_URL = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
+
+    private HttpURLConnection connection;
+
+    // Sends GET http requests and returns a string response
+    public String get(String urlString) {
         BufferedReader reader;
         String line;
         StringBuilder responseContent = new StringBuilder();
@@ -46,17 +59,14 @@ public class Firebase {
             System.out.println("Status: " + status);
 
             if (status > 299) {
-                //Failure
+                // Failure
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
             } else {
-                //Successful
+                // Successful
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             }
-            
-            //Write the stream contents to the reponse
+
+            // Write the stream contents to the reponse
             while ((line = reader.readLine()) != null) {
                 responseContent.append(line);
             }
@@ -71,7 +81,8 @@ public class Firebase {
         return responseContent.toString();
     }
 
-    public static int sendPost(String urlString, String payload) {
+    // Sends POST request and returns int - should be revised to return a string response
+    public String sendPost(String urlString, String payload) {
         BufferedReader reader;
         String line;
         StringBuilder responseContent = new StringBuilder();
@@ -92,28 +103,18 @@ public class Firebase {
             status = connection.getResponseCode();
             System.out.println("Connection status: " + status);
 
-//            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-//                StringBuilder response = new StringBuilder();
-//                String responseLine = null;
-//                while ((responseLine = br.readLine()) != null) {
-//                    response.append(responseLine.trim());
-//                }
-//                System.out.println(response.toString());
-//            }
             if (status > 299) {
-                //Failure
+                // Failure
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
             } else {
-                //Successful
+                // Successful
                 reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                while ((line = reader.readLine()) != null) {
-                    responseContent.append(line);
-                }
             }
-            System.out.println(responseContent.toString());
+
+            // Write the response to the string
+            while ((line = reader.readLine()) != null) {
+                responseContent.append(line);
+            }
             reader.close();
 
         } catch (IOException e) {
@@ -121,25 +122,38 @@ public class Firebase {
         } finally {
             connection.disconnect();
         }
-        return status;
+
+        return responseContent.toString();
+    }
+
+    // Attempts a login request
+    public String sendLoginRequest(String email, String password) {
+        String payload = buildCredentialsPayload(email, password);
+        String response = "";
+        try {
+            response = sendPost(SIGN_IN_URL, payload);
+        } catch (Exception e) {
+
+        }
+        return response;
+    }
+
+    // Attempts a signup request
+    public String sendSignupRequest(String email, String password) {
+        String payload = buildCredentialsPayload(email, password);
+        String response = sendPost(SIGN_UP_URL, payload);
+        return response;
     }
 
     // Creates JSON payloard for signing in and signing up
-    public static String buildCredentialsPayload(String email, String password) {
+    public String buildCredentialsPayload(String email, String password) {
         return "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
     }
 
-    
-    public static boolean sendLoginRequest(String email, String password) {
-        String payload = buildCredentialsPayload(email, password);
-        int result = sendPost(SIGN_IN, payload);
-        return result <= 200; //returns true if connection successful
-    }
-
-    public static boolean sendSignupRequest(String email, String password) {
-        String payload = buildCredentialsPayload(email, password);
-        int result = sendPost(SIGN_UP, payload);
-        return result <= 200; //returns true if connection successful
+    // Query a user based on the userId
+    public String getUserInfo(String userId) {
+        String response = get(DB_ENDPOINT + "users/" + userId + ".json");
+        return response;
     }
 
 }

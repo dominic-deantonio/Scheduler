@@ -12,11 +12,12 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
+// Shows a calendar based on the dateToDisplay. 
 public class CalendarMonth extends GridPane {
 
     private LocalDate dateToDisplay = LocalDate.now();
     private YearMonth yearMonth;
-    private Text monthLabel = new Text("Error");
+    private Text monthLabel = new Text("Error"); //Ignore NetBeans, this should not be final.
 
     public CalendarMonth() {
         super();
@@ -41,8 +42,8 @@ public class CalendarMonth extends GridPane {
         setHalignment(prevMonthButton, HPos.CENTER); //Centers these objects
 
         //Set the month text label
-        String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.US);        
-        monthLabel.setText(month + " " + yearMonth.getYear());      
+        String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
+        monthLabel.setText(month + " " + yearMonth.getYear());
         monthLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12));
         setColumnSpan(monthLabel, 5);
         setHgrow(monthLabel, Priority.ALWAYS);

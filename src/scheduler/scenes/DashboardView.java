@@ -1,6 +1,5 @@
 package scheduler.scenes;
 
-
 import scheduler.utilities.Constants;
 import scheduler.widgets.*;
 import javafx.scene.Scene;
@@ -10,15 +9,15 @@ import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
+import scheduler.models.User;
 
 public class DashboardView extends BorderPane {
 
     Button logoutButton = new Button("Log out");
     Insets insets = new Insets(15);
 
-    public DashboardView(Stage mainWindow) {
+    public DashboardView(Stage mainWindow, User user) {
         super();
-
         //Set buttons' attributes
         logoutButton.setOnAction((ActionEvent e) -> {
             mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
@@ -43,7 +42,7 @@ public class DashboardView extends BorderPane {
         DashboardView.setMargin(left, insets);
 
         //Add the nodes to this object
-        this.setTop(new SceneHeader("Dashboard"));
+        this.setTop(new SceneHeader("Dashboard", user));
         this.setCenter(center);
         this.setLeft(left);
 
