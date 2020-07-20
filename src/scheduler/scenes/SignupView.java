@@ -1,15 +1,15 @@
 package scheduler.scenes;
 
+import java.io.IOException;
 import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-
 import javafx.scene.control.*;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import scheduler.models.Controller;
+import scheduler.models.User;
 
 public class SignupView extends VBox {
 
@@ -18,41 +18,61 @@ public class SignupView extends VBox {
     TextField emailTextField = new TextField();
     TextField zipCodeField = new TextField();
     PasswordField passwordField = new PasswordField();
+    PasswordField confirmPasswordField = new PasswordField();
+    Text errorMessage = new Text("");
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("I already have an account");
+    int WIDTH = 200;
 
-    public SignupView(Scene scene) {
+    public SignupView() {
         super(5);
 
         //First name field
         firstNameField.setPromptText("First name");
-        firstNameField.setPrefWidth(200);
+        firstNameField.setPrefWidth(WIDTH);
 
         //Last name field
         lastNameField.setPromptText("Last name");
-        lastNameField.setPrefWidth(200);
+        lastNameField.setPrefWidth(WIDTH);
 
         //ZIP code field
         zipCodeField.setPromptText("ZIP code");
-        zipCodeField.setPrefWidth(200);
+        zipCodeField.setPrefWidth(WIDTH);
 
         //Email field
         emailTextField.setPromptText("Email");
-        emailTextField.setPrefWidth(200);
+        emailTextField.setPrefWidth(WIDTH);
 
         //Password field
         passwordField.setPromptText("Password");
-        passwordField.setPrefWidth(200);
+        passwordField.setPrefWidth(WIDTH);
 
-        //Login button
+        //Confirm password field
+        confirmPasswordField.setPromptText("Re-enter password");
+        confirmPasswordField.setPrefWidth(WIDTH);
+
+        //Set error message color
+        errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
+
+        //Submit button
         submitButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
-        submitButton.setPrefWidth(200);
+        submitButton.setPrefWidth(WIDTH);
+        submitButton.setOnAction((ActionEvent e) -> {
+            errorMessage.setText("");
+//            deactivateElements();
+            try {
+                Controller.getInstance().signUp(emailTextField.getText(), passwordField.getText());
+            } catch (IOException ex) {
+                errorMessage.setText(ex.getMessage());
+            }
+//            reactivateElements();
+
+        });
 
         //Back to login button
-        goLoginButton.setPrefWidth(200);
+        goLoginButton.setPrefWidth(WIDTH);
         goLoginButton.setOnAction((ActionEvent e) -> {
-//            scene.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
-            scene.setRoot(new LoginView(scene));
+            Controller.getInstance().goToScene("login");
         });
 
         //Set the VBox and add the children
@@ -65,12 +85,10 @@ public class SignupView extends VBox {
                 zipCodeField,
                 emailTextField,
                 passwordField,
-                new Label("\n"),
+                confirmPasswordField,
+                errorMessage,
                 submitButton,
-                goLoginButton,
-                new Label("\n")
+                goLoginButton
         );
-
     }
-
 }

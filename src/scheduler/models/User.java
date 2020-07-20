@@ -11,7 +11,7 @@ public class User {
     private String kind;            
     private String localId;         //the user id. use this to reference this user in the database
     private String displayName;     //this field doesn't need to be used, but does need to exist
-    private String idToken;         //maybe used for security? not sure
+    private String idToken;         //maybe used for security? not sure - 
     private int expiresIn;          //perhaps how long the idToken lasts?
     private int zipCode;
 
@@ -31,7 +31,7 @@ public class User {
                 + "\nkind: " + kind
                 + "\nlocalId: " + localId
                 + "\ndisplayName: " + displayName
-                + "\nidToken: " + idToken
+//                + "\nidToken: " + idToken //omitted from toString because so long
                 + "\nexpiresIn: " + expiresIn
                 + "\nzipCode: " + zipCode;
     }

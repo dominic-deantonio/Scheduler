@@ -10,9 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import scheduler.models.Controller;
-import scheduler.models.User;
 
 //This is the view where the user can log in
 public class LoginView extends VBox {
@@ -23,56 +21,50 @@ public class LoginView extends VBox {
     Button signupButton = new Button("Sign up");
     Text forgotButton = new Text("Forgot password?");
     Text errorMessage = new Text("");
+    int WIDTH = 200;
 
-    public LoginView(Scene scene) {
+    Button devLoginButton = new Button("Dev Log in");
+
+    public LoginView() {
         super(5);
 
         //Email field
         emailTextField.setPromptText("Email");
-        emailTextField.setPrefWidth(200);
+        emailTextField.setPrefWidth(WIDTH);
 
         //Password field
         passwordField.setPromptText("Password");
-        passwordField.setPrefWidth(200);
+        passwordField.setPrefWidth(WIDTH);
 
         //Login button
         loginButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
-        loginButton.setPrefWidth(200);
+        loginButton.setPrefWidth(WIDTH);
         loginButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");
             deactivateElements();
             try {
-//                long startTime = System.currentTimeMillis();
-                User user = Controller.getInstance().login(emailTextField.getText(), passwordField.getText());
-//                long endTime = System.currentTimeMillis();
-//                long seconds = (endTime - startTime) / 1000;
-//                mainWindow.setScene(new Scene(new DashboardView(mainWindow, user)));
-                scene.setRoot(new DashboardView(scene, user));
+                Controller.getInstance().login(emailTextField.getText(), passwordField.getText());
             } catch (IOException ex) {
                 errorMessage.setText(ex.getMessage());
             }
             reactivateElements();
-
         });
 
         //Sign up button
-        signupButton.setPrefWidth(200);
+        signupButton.setPrefWidth(WIDTH);
         signupButton.setOnAction((ActionEvent e) -> {
-//            mainWindow.setScene(new Scene(new SignupView(mainWindow)));
-            scene.setRoot(new SignupView(scene));
+            Controller.getInstance().goToScene("signup");
         });
 
         //Forgot password button
         forgotButton.setCursor(Cursor.HAND);
         forgotButton.setFill(Color.BLUE);
         forgotButton.setOnMouseClicked((MouseEvent e) -> {
-//            mainWindow.setScene(new Scene(new ForgotView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
-            scene.setRoot(new ForgotView(scene));
+            Controller.getInstance().goToScene("forgot");
         });
 
         //Set up the error text
         errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
-//        errorMessage.setText("Here is an error");
 
         //Set the VBox
         this.setFillWidth(false);
@@ -89,6 +81,7 @@ public class LoginView extends VBox {
         );
     }
 
+    //Don't allow interaction while scene is processing (prevent double login attempts before first finishes)
     private void deactivateElements() {
         emailTextField.setEditable(false);
         passwordField.setEditable(false);

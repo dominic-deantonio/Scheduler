@@ -3,16 +3,10 @@ package scheduler.scenes;
 import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
-
 import javafx.scene.control.*;
-import javafx.scene.effect.Effect;
-import javafx.scene.input.MouseEvent;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import scheduler.models.Controller;
 
 public class ForgotView extends VBox {
 
@@ -20,7 +14,7 @@ public class ForgotView extends VBox {
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("Log in instead");
 
-    public ForgotView(Scene scene) {
+    public ForgotView() {
         super(5);
 
         //Email field
@@ -31,14 +25,13 @@ public class ForgotView extends VBox {
         submitButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
         submitButton.setPrefWidth(200);
         submitButton.setOnAction((ActionEvent e) -> {
-//            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
             System.out.println("Submit request for forgotton password");
         });
 
         //Back to login button
         goLoginButton.setPrefWidth(200);
         goLoginButton.setOnAction((ActionEvent e) -> {
-            scene.setRoot(new LoginView(scene));
+            Controller.getInstance().goToScene("login");
         });
 
         //Set the VBox

@@ -1,14 +1,12 @@
 package scheduler.scenes;
 
-import scheduler.utilities.Constants;
 import scheduler.widgets.*;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import javafx.stage.Stage;
+import scheduler.models.Controller;
 import scheduler.models.User;
 
 public class AccountView extends BorderPane {
@@ -16,17 +14,26 @@ public class AccountView extends BorderPane {
     Button logoutButton = new Button("Log out");
     Insets insets = new Insets(15);
 
-    public AccountView(Scene scene, User user) {
+    public AccountView(User user) {
         super();
         //Set buttons' attributes
         logoutButton.setOnAction((ActionEvent e) -> {
-            scene.setRoot(new DashboardView(scene, user));
-//            mainWindow.setScene(new Scene(new DashboardView(mainWindow, user)));
+            Controller.getInstance().logout();
+        });
+
+        //Set up a button that allows you to exit account view
+        Button goDashboardButton = new Button("Dashboard");
+        goDashboardButton.setOnAction((ActionEvent e) -> {
+            Controller.getInstance().goToScene("dashboard");
         });
 
         //Create the center node and children
         VBox center = new VBox();
-        center.getChildren().add(new CalendarMonth());
+        center.getChildren().addAll(
+                new Text("Your account information:\n\n"),
+                new Text(user.toString() + "\n\n"),
+                goDashboardButton
+        );
 
         //Create the left node and children
         VBox left = new VBox(5);
