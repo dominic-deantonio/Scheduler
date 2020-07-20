@@ -11,16 +11,17 @@ import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import scheduler.models.User;
 
-public class DashboardView extends BorderPane {
+public class AccountView extends BorderPane {
 
     Button logoutButton = new Button("Log out");
     Insets insets = new Insets(15);
 
-    public DashboardView(Scene scene, User user) {
+    public AccountView(Scene scene, User user) {
         super();
         //Set buttons' attributes
         logoutButton.setOnAction((ActionEvent e) -> {
-//            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+            scene.setRoot(new DashboardView(scene, user));
+//            mainWindow.setScene(new Scene(new DashboardView(mainWindow, user)));
         });
 
         //Create the center node and children
@@ -30,19 +31,14 @@ public class DashboardView extends BorderPane {
         //Create the left node and children
         VBox left = new VBox(5);
         left.getChildren().addAll(
-                new Button("Placeholder 1"),
-                new Button("Placeholder 2"),
-                new Button("Placeholder 3"),
-                new Button("Placeholder 4"),
-                new Button("Options"),
-                logoutButton
+                new Text("Should anything go here?")
         );
 
         //Set the attributes of this scene
-        DashboardView.setMargin(left, insets);
+        AccountView.setMargin(left, insets);
 
         //Add the nodes to this object
-        this.setTop(new SceneHeader("Dashboard", user));
+        this.setTop(new SceneHeader("Account", user));
         this.setCenter(center);
         this.setLeft(left);
 

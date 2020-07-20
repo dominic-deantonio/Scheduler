@@ -21,7 +21,7 @@ public class SignupView extends VBox {
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("I already have an account");
 
-    public SignupView(Stage mainWindow) {
+    public SignupView(Scene scene) {
         super(5);
 
         //First name field
@@ -51,7 +51,8 @@ public class SignupView extends VBox {
         //Back to login button
         goLoginButton.setPrefWidth(200);
         goLoginButton.setOnAction((ActionEvent e) -> {
-            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+//            scene.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+            scene.setRoot(new LoginView(scene));
         });
 
         //Set the VBox and add the children

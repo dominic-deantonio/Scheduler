@@ -24,7 +24,7 @@ public class LoginView extends VBox {
     Text forgotButton = new Text("Forgot password?");
     Text errorMessage = new Text("");
 
-    public LoginView(Stage mainWindow) {
+    public LoginView(Scene scene) {
         super(5);
 
         //Email field
@@ -46,7 +46,8 @@ public class LoginView extends VBox {
                 User user = Controller.getInstance().login(emailTextField.getText(), passwordField.getText());
 //                long endTime = System.currentTimeMillis();
 //                long seconds = (endTime - startTime) / 1000;
-                mainWindow.setScene(new Scene(new DashboardView(mainWindow, user), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+//                mainWindow.setScene(new Scene(new DashboardView(mainWindow, user)));
+                scene.setRoot(new DashboardView(scene, user));
             } catch (IOException ex) {
                 errorMessage.setText(ex.getMessage());
             }
@@ -57,14 +58,16 @@ public class LoginView extends VBox {
         //Sign up button
         signupButton.setPrefWidth(200);
         signupButton.setOnAction((ActionEvent e) -> {
-            mainWindow.setScene(new Scene(new SignupView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+//            mainWindow.setScene(new Scene(new SignupView(mainWindow)));
+            scene.setRoot(new SignupView(scene));
         });
 
         //Forgot password button
         forgotButton.setCursor(Cursor.HAND);
         forgotButton.setFill(Color.BLUE);
         forgotButton.setOnMouseClicked((MouseEvent e) -> {
-            mainWindow.setScene(new Scene(new ForgotView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+//            mainWindow.setScene(new Scene(new ForgotView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+            scene.setRoot(new ForgotView(scene));
         });
 
         //Set up the error text

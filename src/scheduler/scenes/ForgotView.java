@@ -20,24 +20,25 @@ public class ForgotView extends VBox {
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("Log in instead");
 
-    public ForgotView(Stage mainWindow) {
+    public ForgotView(Scene scene) {
         super(5);
 
         //Email field
         emailTextField.setPromptText("Email");
         emailTextField.setPrefWidth(200);
 
-        //Login button
+        //Submit button
         submitButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
         submitButton.setPrefWidth(200);
         submitButton.setOnAction((ActionEvent e) -> {
-            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+//            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+            System.out.println("Submit request for forgotton password");
         });
 
         //Back to login button
         goLoginButton.setPrefWidth(200);
         goLoginButton.setOnAction((ActionEvent e) -> {
-            mainWindow.setScene(new Scene(new LoginView(mainWindow), Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
+            scene.setRoot(new LoginView(scene));
         });
 
         //Set the VBox
