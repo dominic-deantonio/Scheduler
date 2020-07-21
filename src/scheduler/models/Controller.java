@@ -121,8 +121,11 @@ public class Controller {
                 new SignupView(),
                 new ForgotView(),
                 new DashboardView(user),
-                new AccountView(user)
-            };
+                new AccountView(user),
+                new MyScheduleView(user),
+                new CreateGroupView(user),
+                new ViewGroupView(user),
+                new OptionsView(user),};
         }
     }
 
@@ -143,6 +146,18 @@ public class Controller {
                 break;
             case "account":
                 scene.setRoot(sceneParents[4]);
+                break;
+            case "schedule":
+                scene.setRoot(sceneParents[5]);
+                break;
+            case "create":
+                scene.setRoot(sceneParents[6]);
+                break;
+            case "view":
+                scene.setRoot(sceneParents[7]);
+                break;
+            case "options":
+                scene.setRoot(sceneParents[8]);
                 break;
             default:
                 System.out.println("There was an error going to \'" + sceneName + "\'. Is it spelled correctly?");

@@ -8,28 +8,23 @@ import javafx.geometry.Insets;
 import scheduler.models.Controller;
 import scheduler.models.User;
 
-public class DashboardView extends BorderPane {
+public class CreateGroupView extends BorderPane {
 
     Insets insets = new Insets(15);
 
-    public DashboardView(User user) {
+    public CreateGroupView(User user) {
         super();
 
-        //Create the center node and children
         VBox center = new VBox();
-        center.getChildren().add(new CalendarMonth());
+        // add table here to track current appointments
 
-        //Create the left node and children
         VBox left = new VBox();
         left.getChildren().add(new NavigationButtons());
 
-        //Set the attributes of this scene
         DashboardView.setMargin(left, insets);
 
-        //Add the nodes to this object
-        this.setTop(new SceneHeader("Dashboard", user));
+        this.setTop(new SceneHeader("Create Groups", user));
         this.setCenter(center);
         this.setLeft(left);
-
     }
 }
