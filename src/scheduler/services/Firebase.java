@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 //There is no need to instantiate new Firebase classes, so this is a singleton
+// See https://firebase.google.com/docs/reference/rest/database for db api
 public class Firebase {
 
     //Firebase should be accessed by the getInstance
@@ -36,8 +37,8 @@ public class Firebase {
     private final String MEASUREMENT_ID = "G-H2P33184SZ";
     private final String DB_ENDPOINT = "https://scheduler-cmsc.firebaseio.com/";
     private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
-    private final String SIGN_UP_URL = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
-    private final String SIGN_IN_URL = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
+    private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
+    private final String SIGN_IN_ENDPOINT = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
 
     private HttpURLConnection connection;
 
@@ -81,8 +82,8 @@ public class Firebase {
         return responseContent.toString();
     }
 
-    // Sends POST request and returns int - should be revised to return a string response
-    public String sendPost(String urlString, String payload) {
+    // Sends POST or PUT request
+    public String sendRequest(String type, String urlString, String payload) {
         BufferedReader reader;
         String line;
         StringBuilder responseContent = new StringBuilder();
@@ -91,7 +92,7 @@ public class Firebase {
             URL url = new URL(urlString);
 
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(type);  //Should be "POST" or "PUT" 
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
@@ -131,23 +132,26 @@ public class Firebase {
         String payload = buildCredentialsPayload(email, password);
         String response = "";
         try {
-            response = sendPost(SIGN_IN_URL, payload);
+            response = sendRequest("POST", SIGN_IN_ENDPOINT, payload);
         } catch (Exception e) {
 
         }
         return response;
     }
 
-    // Attempts a signup request
-    public String sendSignupRequest(String email, String password) {
-        String payload = buildCredentialsPayload(email, password);
-        String response = sendPost(SIGN_UP_URL, payload);
-        return response;
+    // Creates JSON payloard for signing in and signing up
+    private String buildCredentialsPayload(String email, String password) {
+        return "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
     }
 
-    // Creates JSON payloard for signing in and signing up
-    public String buildCredentialsPayload(String email, String password) {
-        return "{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+    // Builds new user data JSON to send to the database
+    // this should be updated as new data requirements are realized and the db schema is changed
+    private String buildSignUpPayload(String first, String last, String email, String zip) {
+        String newUserJson = "{\"firstName\":\"" + first + "\","
+                + "\"lastName\":\"" + last + "\","
+                + "\"email\":\"" + email + "\","
+                + "\"zipCode\": \"" + zip + "\"}";
+        return newUserJson;
     }
 
     // Query a user based on the userId
@@ -156,4 +160,20 @@ public class Firebase {
         return response;
     }
 
+    // Attempts a signup request
+    public String sendSignupRequest(String firstName, String lastName, String email, String zip, String password) {
+        String response;
+        String payload = buildCredentialsPayload(email, password);
+        response = sendRequest("POST", SIGN_UP_ENDPOINT, payload);
+
+        return response;
+    }
+
+    //Put new user data 
+    public String putNewUserData(String userId, String firstName, String lastName, String email, String zip) {
+        String payload = buildSignUpPayload(firstName, lastName, email, zip);
+        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + userId + ".json", payload);
+        System.out.println(response);
+        return response;
+    }
 }

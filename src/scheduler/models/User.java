@@ -8,7 +8,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private String kind;            
+    private String kind;
     private String localId;         //the user id. use this to reference this user in the database
     private String displayName;     //this field doesn't need to be used, but does need to exist
     private String idToken;         //maybe used for security? not sure - 
@@ -31,7 +31,7 @@ public class User {
                 + "\nkind: " + kind
                 + "\nlocalId: " + localId
                 + "\ndisplayName: " + displayName
-//                + "\nidToken: " + idToken //omitted from toString because so long
+                //                + "\nidToken: " + idToken         //omitted from toString because so long
                 + "\nexpiresIn: " + expiresIn
                 + "\nzipCode: " + zipCode;
     }
@@ -42,6 +42,7 @@ public class User {
         firstName = info.getFirstName();
         lastName = info.getLastName();
         zipCode = info.getZipCode();
-        System.out.println("Updated account info of " + firstName);
+        email = info.getEmail();            //This was already set by the auth JSON response, but no harm being uniform
+        System.out.println("Received " + firstName + "'s account info.");
     }
 }

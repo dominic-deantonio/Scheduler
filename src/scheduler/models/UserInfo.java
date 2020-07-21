@@ -10,6 +10,7 @@ class UserInfo {
 
     private String firstName;
     private String lastName;
+    private String email;
     private int zipCode;
 
     public String getFirstName() {
@@ -19,8 +20,12 @@ class UserInfo {
     public String getLastName() {
         return lastName;
     }
-    
-    public int getZipCode(){
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getZipCode() {
         return zipCode;
     }
 

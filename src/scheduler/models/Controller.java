@@ -3,6 +3,7 @@ package scheduler.models;
 import scheduler.services.Firebase;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -49,6 +50,7 @@ public class Controller {
 
         String jsonResponse = Firebase.getInstance().sendLoginRequest(email, password);
         user = buildUser(jsonResponse);
+        user = updateUserObjectData();
         buildScenes(); //New user, rebuild scenes for this user
         goToScene("dashboard");
     }
@@ -60,16 +62,30 @@ public class Controller {
     }
 
     // Sign up method
-    public void signUp(String email, String password) throws IOException {
+    public void signUp(String fName, String lName, String zip, String email, String pWord, String pWord2) throws IOException {
 
-        if (email.equals("") || password.equals("")) {
-            throw new IOException("You must enter an email and password.");
+        String[] inputs = new String[]{fName, lName, zip, email, pWord, pWord2};
+        ArrayList<String> missingInputs = new ArrayList();
+
+        //Security methods should be separated into their own classes
+        for (String input : inputs) {
+            if (input.equals("")) {
+                missingInputs.add(input);
+            }
+        }
+        if (missingInputs.size() > 0) {
+            String errorMsg = missingInputs.size() + " missing field(s) - all fields are required";
+            throw new IOException(errorMsg);
+        }
+        if (!pWord.equals(pWord2)) {
+            throw new IOException("Passwords don't match");
         }
         //Throw more exceptions for security, formatting, bad response from network, etc here
         //This method needs A LOT of work before safely building the user
-
-        String jsonResponse = Firebase.getInstance().sendLoginRequest(email, password);
+        String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);
         user = buildUser(jsonResponse);
+        jsonResponse = Firebase.getInstance().putNewUserData(user.getId(), fName, lName, email, zip);
+        System.out.println(jsonResponse);
         buildScenes();
         goToScene("dashboard");
     }
@@ -78,12 +94,11 @@ public class Controller {
     private User buildUser(String loginResponse) {
         Gson gson = new Gson();
         user = gson.fromJson(loginResponse, User.class);
-        updateUserInfo(user);
         return user;
     }
 
     //Update the user information by querying the database and applying response to the user object
-    private User updateUserInfo(User user) {
+    private User updateUserObjectData() {
         Gson gson = new Gson();
         String databaseResponse = Firebase.getInstance().getUserInfo(user.getId());
         UserInfo data = gson.fromJson(databaseResponse, UserInfo.class);

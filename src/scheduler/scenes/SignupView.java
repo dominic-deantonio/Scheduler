@@ -61,7 +61,13 @@ public class SignupView extends VBox {
             errorMessage.setText("");
 //            deactivateElements();
             try {
-                Controller.getInstance().signUp(emailTextField.getText(), passwordField.getText());
+                Controller.getInstance().signUp(
+                        firstNameField.getText(),
+                        lastNameField.getText(),
+                        zipCodeField.getText(),
+                        emailTextField.getText(),
+                        passwordField.getText(),
+                        confirmPasswordField.getText());
             } catch (IOException ex) {
                 errorMessage.setText(ex.getMessage());
             }
