@@ -33,7 +33,7 @@ public class Controller {
         getInstance(); // Prevents attempted method calls on uninstantiated instance (was happening on first getInstance().login() method because didnt exist)
         scene = new Scene(new LoginView());
         mainWindow.setMinHeight(500);
-        mainWindow.setMinWidth(500);
+        mainWindow.setMinWidth(1100);
         mainWindow.setTitle("Super Scheduler");
         mainWindow.setScene(scene);
         mainWindow.show();

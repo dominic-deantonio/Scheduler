@@ -17,11 +17,14 @@ public class DashboardView extends BorderPane {
 
         //Create the center node and children
         VBox center = new VBox();
-        center.getChildren().add(new CalendarMonth());
+        center.getChildren().add(new CalendarWeek());
 
         //Create the left node and children
         VBox left = new VBox();
         left.getChildren().add(new NavigationButtons());
+
+        VBox right = new VBox();
+        right.getChildren().add(new CalendarMonth());
 
         //Set the attributes of this scene
         DashboardView.setMargin(left, insets);
@@ -30,6 +33,7 @@ public class DashboardView extends BorderPane {
         this.setTop(new SceneHeader("Dashboard", user));
         this.setCenter(center);
         this.setLeft(left);
+        this.setRight(right);
 
     }
 }

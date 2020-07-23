@@ -8,6 +8,7 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -101,6 +102,7 @@ public class CalendarMonth extends GridPane {
         buildHeader();
         buildDayLabels();
         buildDateButtons();
+        setPadding(new Insets(15));
     }
 
 }
