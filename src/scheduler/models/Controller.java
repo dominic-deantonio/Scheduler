@@ -66,7 +66,7 @@ public class Controller {
 
         String[] inputs = new String[]{fName, lName, zip, email, pWord, pWord2};
         ArrayList<String> missingInputs = new ArrayList();
-
+        
         //Security methods should be separated into their own classes
         for (String input : inputs) {
             if (input.equals("")) {
@@ -80,6 +80,8 @@ public class Controller {
         if (!pWord.equals(pWord2)) {
             throw new IOException("Passwords don't match");
         }
+        
+        String groupID = "";
         //Throw more exceptions for security, formatting, bad response from network, etc here
         //This method needs A LOT of work before safely building the user
         String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);
@@ -125,7 +127,8 @@ public class Controller {
                 new MyScheduleView(user),
                 new CreateGroupView(user),
                 new ViewGroupView(user),
-                new OptionsView(user),};
+                new OptionsView(user),
+                new MapView(user),};
         }
     }
 
@@ -158,6 +161,9 @@ public class Controller {
                 break;
             case "options":
                 scene.setRoot(sceneParents[8]);
+                break;
+            case "map":
+                scene.setRoot(sceneParents[9]);
                 break;
             default:
                 System.out.println("There was an error going to \'" + sceneName + "\'. Is it spelled correctly?");

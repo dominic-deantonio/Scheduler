@@ -11,6 +11,7 @@ public class NavigationButtons extends VBox {
     Button myScheduleButton = new Button("My Schedule");
     Button createGroupButton = new Button("Create Group");
     Button ViewGroupsButton = new Button("View Groups");
+    Button ViewMapButton = new Button("View Map");
     Button optionsButton = new Button("Options");
     Button logoutButton = new Button("Log out");
 
@@ -31,6 +32,10 @@ public class NavigationButtons extends VBox {
         ViewGroupsButton.setOnAction((ActionEvent e) -> {
             Controller.getInstance().goToScene("view");
         });
+        
+        ViewMapButton.setOnAction((ActionEvent e) -> {
+            Controller.getInstance().goToScene("map");
+        });
 
         optionsButton.setOnAction((ActionEvent e) -> {
             Controller.getInstance().goToScene("options");
@@ -45,6 +50,7 @@ public class NavigationButtons extends VBox {
                 myScheduleButton,
                 createGroupButton,
                 ViewGroupsButton,
+                ViewMapButton,
                 optionsButton,
                 logoutButton
         );

@@ -28,5 +28,6 @@ class UserInfo {
     public int getZipCode() {
         return zipCode;
     }
+    
 
 }

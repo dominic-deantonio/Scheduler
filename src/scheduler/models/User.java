@@ -23,6 +23,7 @@ public class User {
         return localId;
     }
 
+    
     @Override
     public String toString() {
         return "firstName: " + firstName
