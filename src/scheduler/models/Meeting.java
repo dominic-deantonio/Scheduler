@@ -90,5 +90,9 @@ public class Meeting {
             new Meeting(20, 45, 21, 30, "Study Group")
         };
     }
+    
+    public String getDisplayInfo(){
+        return subject;
+    }
 
 }

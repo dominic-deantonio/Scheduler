@@ -95,7 +95,7 @@ public class CalendarWeek extends VBox {
 
         for (Meeting meeting : meetings) {
 
-            Button meetingBtn = new Button(meeting.subject);
+            MeetingBlock meetingBtn = new MeetingBlock(meeting);
             meetingBtn.setPrefWidth(80); //This gets overwritten by the setmaxsize
             meetingBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  //allow button to grow      
             grid.add(meetingBtn, meeting.day + 1, meeting.getStartingRow(), 1, meeting.getSpan());
