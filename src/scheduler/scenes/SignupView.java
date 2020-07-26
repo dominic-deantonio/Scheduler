@@ -55,7 +55,7 @@ public class SignupView extends VBox {
         errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
 
         //Submit button
-        submitButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
+        submitButton.setStyle(Constants.MAIN_THEME_COLOR);
         submitButton.setPrefWidth(WIDTH);
         submitButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");

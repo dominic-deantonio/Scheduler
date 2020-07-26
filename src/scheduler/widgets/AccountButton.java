@@ -18,6 +18,7 @@ public class AccountButton extends Button {
         Image image = new Image("/scheduler/resources/icon_account.png", 30, 30, true, true);
         ImageView icon = new ImageView(image);
         setGraphic(icon);
+        setFocusTraversable(false);
         setOnAction((ActionEvent e) -> {
             Controller.getInstance().goToScene("account");
         });

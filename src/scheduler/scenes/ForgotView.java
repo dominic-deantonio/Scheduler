@@ -22,7 +22,7 @@ public class ForgotView extends VBox {
         emailTextField.setPrefWidth(200);
 
         //Submit button
-        submitButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
+        submitButton.setStyle(Constants.MAIN_THEME_COLOR);
         submitButton.setPrefWidth(200);
         submitButton.setOnAction((ActionEvent e) -> {
             System.out.println("Submit request for forgotton password");

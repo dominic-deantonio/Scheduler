@@ -10,11 +10,12 @@ import javafx.scene.text.FontWeight;
  */
 public class Constants {
 
-    public static final String BUTTON_EMPHASIS_STYLE = "-fx-base: #EBD0FF;";
+    public static final String MAIN_THEME_COLOR = "#D192FF";
     public static final int CREDENTIAL_FIELD_WIDTH = 200;
     public static final int WINDOW_WIDTH = 500;
     public static final int WINDOW_HEIGHT = 500;
     public static final Font SCENE_TITLE_FONT = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25);
+    public static final Font SUB_TITLE_FONT = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 15);
     public static final Color TEXT_ERROR_COLOR = Color.RED;
 
 }

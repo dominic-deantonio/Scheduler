@@ -36,7 +36,7 @@ public class LoginView extends VBox {
         passwordField.setPrefWidth(WIDTH);
 
         //Login button
-        loginButton.setStyle(Constants.BUTTON_EMPHASIS_STYLE);
+        loginButton.setStyle("-fx-base: " + Constants.MAIN_THEME_COLOR);
         loginButton.setPrefWidth(WIDTH);
         loginButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");

@@ -1,11 +1,10 @@
 package scheduler.scenes;
 
+import scheduler.widgets.CalendarWeekGui.CalendarWeek;
 import scheduler.widgets.*;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
-import scheduler.models.Controller;
+import scheduler.models.Meeting;
 import scheduler.models.User;
 
 public class DashboardView extends BorderPane {
@@ -17,7 +16,8 @@ public class DashboardView extends BorderPane {
 
         //Create the center node and children
         VBox center = new VBox();
-        center.getChildren().add(new CalendarWeek());
+        Meeting[] meetings = Meeting.getMockAppointments();
+        center.getChildren().add(new CalendarWeek(meetings));
 
         //Create the left node and children
         VBox left = new VBox();

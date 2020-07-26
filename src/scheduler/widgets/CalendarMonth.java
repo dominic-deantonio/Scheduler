@@ -18,7 +18,7 @@ public class CalendarMonth extends GridPane {
 
     private LocalDate dateToDisplay = LocalDate.now();
     private YearMonth yearMonth;
-    private Text monthLabel = new Text("Error"); //Ignore NetBeans, this should not be final.
+    private final Text monthLabel = new Text("Error"); 
 
     public CalendarMonth() {
         super();

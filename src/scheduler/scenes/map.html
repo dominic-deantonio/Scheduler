@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var service;
+      let markers = [];
+      var lorton;
+      var lat = 38.70388;
+      var lng = -77.22823
+      function initialize() {
+  lorton = new google.maps.LatLng(lat, lng);
+
+  map = new google.maps.Map(document.getElementById('map'), {
+      center: lorton,
+      zoom: 13
+    });
+
+  var request = {
+    location: lorton,
+    radius: '3200',
+    keyword: 'coffee'
+  };
+
+  service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, callback);
+}
+
+function setLocation(lat, lng) {
+    lorton = new google.maps.LatLng(lat, long);
+}
+
+function callback(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+   let places = [];
+   for (let i = 0; i < results.length; i++) {
+       places.push(results[i]);
+   }
+
+          if (places.length == 0) {
+            return;
+          } // Clear out the old markers.
+
+          markers.forEach(marker => {
+            marker.setMap(null);
+          });
+          markers = []; // For each place, get the icon, name and location.
+
+          const bounds = new google.maps.LatLngBounds();
+          places.forEach(place => {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            
+            const icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            }; // Create a marker for each place.
+
+            markers.push(
+              new google.maps.Marker({
+                map,
+                icon,
+                address: place.formatted_address,
+                id: place.place_id,
+                title: place.name,
+                position: place.geometry.location
+              })
+              
+            );
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+    
+          for (let j = 0; j < markers.length; j++) {
+              google.maps.event.addListener(markers[j], "click", placeD(j));
+          }
+          const infowindow = new google.maps.InfoWindow();
+          function placeD(i) {
+            return function() {
+                var request = { placeId: markers[i].id };
+                service.getDetails(request, function(details, status) {
+                    google.maps.event.addListener(markers[i], 'click', function() {
+                        infowindow.setContent("<div><strong>" + details.name + "</strong><br />" + details.formatted_address +"<br /> Rating: " + details.rating);
+                        infowindow.open(map, this);
+                    });
+                });
+            };
+          }
+        
+ 
+  }
+  }
+  
+  
+      
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD02frXn2eWSPFat3RbIurFYg3WNQNPrrU&callback=initialize&libraries=places">
+    </script>
+  </body>
+</html>
