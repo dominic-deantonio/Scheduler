@@ -2,6 +2,11 @@ package scheduler.widgets.CalendarWeekGui;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+
+import java.time.format.TextStyle;
+import java.util.Locale;
+import javafx.event.ActionEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -11,6 +16,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import static javafx.scene.layout.GridPane.setColumnSpan;
+import static javafx.scene.layout.GridPane.setHalignment;
+import static javafx.scene.layout.GridPane.setHgrow;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import scheduler.models.Meeting;
 import scheduler.utilities.Constants;
@@ -26,27 +38,17 @@ public class CalendarWeek extends VBox {
     GridPane grid = new GridPane();
     Text headerText = new Text("Week of blah");
     ScrollPane scroll = new ScrollPane();
-    int hourHeight = 80;
+
+    HBox header = new HBox();
+    Meeting[] meetings;
 
     public CalendarWeek(Meeting[] meetings) {
 
         headerText.setFont(Constants.SUB_TITLE_FONT);
+        this.meetings = meetings;
+        rebuild();
+        setPadding(new Insets(15));
 
-        buildTimeLabels();
-        buildBasePane();
-        buildMeetings(meetings);
-
-        //Set the scrollpane and add the header and scrollpane to this object
-        scroll.setFocusTraversable(false);
-        scroll.setContent(grid);
-        scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color:transparent;");
-        getChildren().addAll(headerText, scroll);
-
-    }
-
-    public CalendarWeek() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     //Add time labels to the base grid
@@ -89,35 +91,70 @@ public class CalendarWeek extends VBox {
             }
             grid.getColumnConstraints().add(cc);
         }
+
+        //Set the scrollpane and add the header and scrollpane to this object
+        scroll = new ScrollPane();
+        scroll.setFocusTraversable(false);
+        scroll.setContent(grid);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color:transparent;");
+        this.getChildren().add(scroll);
+
     }
 
-    private void buildMeetings(Meeting[] meetings) {
+    private void buildMeetings() {
 
         for (Meeting meeting : meetings) {
 
             MeetingBlock meetingBtn = new MeetingBlock(meeting);
             meetingBtn.setPrefWidth(80); //This gets overwritten by the setmaxsize
             meetingBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  //allow button to grow      
-            grid.add(meetingBtn, meeting.day + 1, meeting.getStartingRow(), 1, meeting.getSpan());
-
+            grid.add(meetingBtn, meeting.getDay(), meeting.getStartingRow(), 1, meeting.getSpan());
         }
-
-//        for (int day = 1; day < 8; day++) {
-//            //Create the meeting instance
-//
-//            //Create the meeting GUI
-//            int meetingDurationInQuarterHours = 6;
-//            int numberOverlapping = 1;
-//            int startingTimeByBlockIndex = 5;
-//            for (int i = 0; i < numberOverlapping; i++) {
-//
-//                Button meeting = new Button("Meeting subject");
-//                meeting.setPrefWidth(80); //This gets overwritten by the setmaxsize
-//                meeting.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  //allow button to grow      
-//                grid.add(meeting, day, startingTimeByBlockIndex, 1, meetingDurationInQuarterHours);
-//
-//            }
-//        }
     }
 
+    private void buildHeader() {
+        //Set the "previous week" button
+        Button prevMonthButton = new Button("<");
+        prevMonthButton.setOnAction((ActionEvent e) -> {
+            dateToDisplay = dateToDisplay.minusWeeks(1);
+            rebuild();
+        });
+        header.getChildren().add(prevMonthButton);
+//        setHalignment(prevMonthButton, HPos.CENTER); //Centers these objects
+
+        //Set the "next month" button
+        Button nextMonthButton = new Button(">");
+        nextMonthButton.setOnAction((ActionEvent e) -> {
+            dateToDisplay = dateToDisplay.plusWeeks(1);
+            rebuild();
+        });
+        header.getChildren().add(nextMonthButton);
+//        setHalignment(nextMonthButton, HPos.CENTER); //Centers these objects
+
+        //Set the month text label
+        String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
+        monthLabel.setText("Week of " + dateToDisplay.getDayOfMonth() + " " + month + " " + yearMonth.getYear());
+        monthLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12));
+        setColumnSpan(monthLabel, 5);
+        setHgrow(monthLabel, Priority.ALWAYS);
+        setHalignment(monthLabel, HPos.CENTER); //Centers these objects
+        header.getChildren().add(monthLabel);
+        this.getChildren().add(header);
+
+    }
+    //Allows this object to rebuild all children at will
+
+    private void rebuild() {
+        this.getChildren().clear();
+        header.getChildren().clear();
+        grid.getChildren().clear();
+        
+        yearMonth = YearMonth.of(dateToDisplay.getYear(), dateToDisplay.getMonth());
+        buildHeader();
+        buildTimeLabels();
+        buildBasePane();
+        buildMeetings();
+        
+    }
 }

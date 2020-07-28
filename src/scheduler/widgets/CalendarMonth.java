@@ -20,15 +20,16 @@ public class CalendarMonth extends GridPane {
     private YearMonth yearMonth;
     private final Text monthLabel = new Text("Error"); 
 
+
     public CalendarMonth() {
         super();
 
         this.setVgap(2);
         this.setHgap(2);
         this.setAlignment(Pos.CENTER);
-
-        rebuild();
         this.setAlignment(Pos.CENTER);
+        rebuild();
+
     }
 
     //Adds the previous/forward buttons and month label to the grid

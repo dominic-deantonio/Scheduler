@@ -80,8 +80,7 @@ public class Controller {
         if (!pWord.equals(pWord2)) {
             throw new IOException("Passwords don't match");
         }
-        
-        String groupID = "";
+
         //Throw more exceptions for security, formatting, bad response from network, etc here
         //This method needs A LOT of work before safely building the user
         String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);

@@ -1,98 +1,108 @@
 package scheduler.models;
 
-//This class holds the meeting data and has methods to provide GUI representation data
+import java.time.LocalDateTime;
+
 public class Meeting {
 
     public String subject = "No subject";
-    public int startHour;
-    public int startMinute;
-    public int endHour;
-    public int endMinute;
-    public int day = 0;
-    public int startDate = 20200726;
-    public int startTime = 1300;
-    public int endDate = 20200726;
-    public int endTime = 1345;
+    private String start;       //Storage format format should be YYYYMMDDHHMM
+    private String end;         //Storage format format should be YYYYMMDDHHMM
 
-    public Meeting(int startHour, int startMinute, int endHour, int endMinute) {
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+
+    private int[] position = new int[]{};
+
+    private String[] attendeeIds;
+
+    public Meeting(String start, String end) {
+        this.start = start;
+        this.end = end;
+        startDateTime = parseDateTime(start);
+        endDateTime = parseDateTime(end);
     }
 
-    public Meeting(int startHour, int startMinute, int endHour, int endMinute, String subject) {
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
+    public Meeting(String start, String end, String subject) {
+        this.start = start;
+        this.end = end;
         this.subject = subject;
+        startDateTime = parseDateTime(start);
+        endDateTime = parseDateTime(end);
     }
 
-    // Use this to get the start or stop minute
-    // This is terrible and you should use actual time instead.
-    public int getMinuteQuarter(int input) {
-        switch (input) {
-            case 0:
-                return 0;
-            case 15:
-                return 1;
-            case 30:
-                return 2;
-            case 45:
-                return 3;
-            default:
-                System.out.println("Can't parse meeting minute. Should be a multiple of 0, 15, 30, or 45");
-                return 0;
-        }
-    }
+    //NEEDS ERROR CHECKING BADLY
+    private LocalDateTime parseDateTime(String date) {
+        int year, month, dayOfMonth, hour, minute;
 
-    // How many tiles this should stetch over
-    public int getSpan() {
-        return getEndingRow() - getStartingRow();
-    }
+        //Get the year value
+        String num = date.substring(0, 4);
+        year = Integer.valueOf(num);
 
-    public int getEndingRow() {
-        int row = 1;
-        if (endHour == 0) {
-            row += getMinuteQuarter(endMinute);
-        } else {
-            row = endHour * 4;
-            row += getMinuteQuarter(endMinute) + 1;
-        }
-        return row;
-    }
+        //Get the month value
+        num = date.substring(4, 6);
+        month = Integer.valueOf(num);
 
-    public int getStartingRow() {
-        int row = 1;
-        if (startHour == 0) {
-            row += getMinuteQuarter(startMinute);
-        } else {
-            row = startHour * 4;
-            row += getMinuteQuarter(startMinute) + 1;
-        }
-        return row;
-    }
+        //Get the day value
+        num = date.substring(6, 8);
+        dayOfMonth = Integer.valueOf(num);
 
-    private void parseDateTime() {
+        //Get the hour value
+        num = date.substring(8, 10);
+        hour = Integer.valueOf(num);
+
+        //Get the minute value
+        num = date.substring(10, 12);
+        minute = Integer.valueOf(num);
+
+        return LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 
     }
 
     public static Meeting[] getMockAppointments() {
         return new Meeting[]{
-            new Meeting(7, 30, 8, 0, "Dental"),
-            new Meeting(8, 15, 9, 0, "Chiro"),
-            new Meeting(9, 45, 10, 30, "Doctor"),
-            new Meeting(10, 45, 11, 45, "Jeff Facetime"),
-            new Meeting(12, 00, 13, 30, "Lunch Meeting"),
-            new Meeting(14, 15, 16, 30, "Movies with Mom"),
-            new Meeting(18, 45, 19, 30, "Dinner at Applebees"),
-            new Meeting(20, 45, 21, 30, "Study Group")
+            new Meeting("202007260730", "202007260800", "Dental Appointment"),
+            new Meeting("202007260800", "202007260900", "Gym - leg day"),
+            new Meeting("202007260915", "202007261030", "Doctor's office"),
+            new Meeting("202007261045", "202007261215", "Lunch Meeting"),
+            new Meeting("202007261430", "202007261645", "Jeff Facetime meeting"),
+            new Meeting("202007261700", "202007261930", "Movies with Mom"),
+            new Meeting("202007262015", "202007262100", "Study Group")
+
         };
     }
-    
-    public String getDisplayInfo(){
+
+    public String getDisplayInfo() {
         return subject;
     }
 
+    public int getRow(LocalDateTime dateTime) {
+
+        LocalDateTime target = LocalDateTime.of(2020, 07, 26, 00, 00);
+        int row = 0;
+        for (int i = 1; i < 97; i++) {
+
+            if (target.isEqual(dateTime)) {
+                row = i;
+                break;
+            } else {
+                target = target.plusMinutes(15);
+            }
+        }
+        return row;
+    }
+
+    public int getDay() {
+        return 1;
+    }
+
+    public int getStartingRow() {
+        return getRow(startDateTime);
+    }
+
+    public int getSpan() {
+        int startRow = getRow(startDateTime);
+        int endRow = getRow(endDateTime);
+        int span = endRow - startRow;
+        return span;
+    }
 }

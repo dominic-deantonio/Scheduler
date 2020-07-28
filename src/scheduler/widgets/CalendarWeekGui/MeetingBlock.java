@@ -9,7 +9,6 @@ public class MeetingBlock extends Button {
     public MeetingBlock(Meeting meeting) {
         super(meeting.getDisplayInfo());
         setStyle("-fx-base: " + Constants.MAIN_THEME_COLOR);
-
         this.setOnAction(e -> {
             System.out.println("This meeting is: " + meeting.getDisplayInfo());
         });
