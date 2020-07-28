@@ -23,6 +23,34 @@ public class User {
         return localId;
     }
 
+        public String getToken() {
+        return idToken;
+    }
+    
+    public String getKind() {
+        return kind;
+    }
+        
+    public int getExpires() {
+        return expiresIn;
+    }
+    
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+    
+    public String getDisplayName() {
+        if (!"".equals(displayName)) {
+            return displayName;
+        }
+        else {
+            return "You have not specified a display name.";
+        }
+    }
+    
+    public int getZipCode() {
+        return zipCode;
+    }
     
     @Override
     public String toString() {
