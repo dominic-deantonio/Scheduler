@@ -1,30 +1,22 @@
 package scheduler.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Meeting {
 
     public String subject = "No subject";
-    private String start;       //Storage format format should be YYYYMMDDHHMM
-    private String end;         //Storage format format should be YYYYMMDDHHMM
-
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-
-    private int[] position = new int[]{};
-
+    private String organizerId = "";
     private String[] attendeeIds;
 
     public Meeting(String start, String end) {
-        this.start = start;
-        this.end = end;
         startDateTime = parseDateTime(start);
         endDateTime = parseDateTime(end);
     }
 
     public Meeting(String start, String end, String subject) {
-        this.start = start;
-        this.end = end;
         this.subject = subject;
         startDateTime = parseDateTime(start);
         endDateTime = parseDateTime(end);
@@ -60,13 +52,13 @@ public class Meeting {
 
     public static Meeting[] getMockAppointments() {
         return new Meeting[]{
-            new Meeting("202007260730", "202007260800", "Dental Appointment"),
-            new Meeting("202007260800", "202007260900", "Gym - leg day"),
-            new Meeting("202007260915", "202007261030", "Doctor's office"),
-            new Meeting("202007261045", "202007261215", "Lunch Meeting"),
-            new Meeting("202007261430", "202007261645", "Jeff Facetime meeting"),
-            new Meeting("202007261700", "202007261930", "Movies with Mom"),
-            new Meeting("202007262015", "202007262100", "Study Group")
+            new Meeting("202007270730", "202007270800", "Dental Appointment"),
+            new Meeting("202007280800", "202007280900", "Gym - leg day"),
+            new Meeting("202007270915", "202007271030", "Doctor's office"),
+            new Meeting("202007281045", "202007281215", "Lunch Meeting"),
+            new Meeting("202007291430", "202007291645", "Jeff Facetime meeting"),
+            new Meeting("202007281700", "202007281930", "Movies with Mom"),
+            new Meeting("202007302015", "202007302100", "Study Group")
 
         };
     }
@@ -75,13 +67,14 @@ public class Meeting {
         return subject;
     }
 
-    public int getRow(LocalDateTime dateTime) {
+    public int getRow(boolean start) {
 
-        LocalDateTime target = LocalDateTime.of(2020, 07, 26, 00, 00);
+        LocalDateTime dateTimeToUse = start ? startDateTime : endDateTime;
+        LocalDateTime target = LocalDateTime.of(dateTimeToUse.getYear(), dateTimeToUse.getMonth(), dateTimeToUse.getDayOfMonth(), 00, 00);
         int row = 0;
         for (int i = 1; i < 97; i++) {
 
-            if (target.isEqual(dateTime)) {
+            if (target.isEqual(dateTimeToUse)) {
                 row = i;
                 break;
             } else {
@@ -92,17 +85,22 @@ public class Meeting {
     }
 
     public int getDay() {
-        return 1;
+        return startDateTime.getDayOfWeek().getValue();
     }
 
     public int getStartingRow() {
-        return getRow(startDateTime);
+        return getRow(true);
     }
 
     public int getSpan() {
-        int startRow = getRow(startDateTime);
-        int endRow = getRow(endDateTime);
+        int startRow = getRow(true);
+        int endRow = getRow(false);
         int span = endRow - startRow;
         return span;
     }
+
+    public LocalDate getStartDate() {
+        return startDateTime.toLocalDate();
+    }
+
 }
