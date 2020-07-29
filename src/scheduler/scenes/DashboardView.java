@@ -16,8 +16,7 @@ public class DashboardView extends BorderPane {
 
         //Create the center node and children
         VBox center = new VBox();
-        Meeting[] meetings = Meeting.getMockAppointments();
-        center.getChildren().add(new CalendarWeek(meetings));
+        center.getChildren().add(new CalendarWeek(Meeting.getMockAppointments()));
 
         //Create the left node and children
         VBox left = new VBox();

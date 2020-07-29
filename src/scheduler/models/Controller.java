@@ -86,6 +86,7 @@ public class Controller {
         String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);
         user = buildUser(jsonResponse);
         jsonResponse = Firebase.getInstance().putNewUserData(user.getId(), fName, lName, email, zip);
+        user = updateUserObjectData();
         System.out.println(jsonResponse);
         buildScenes();
         goToScene("dashboard");
