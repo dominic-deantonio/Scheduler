@@ -1,32 +1,15 @@
 package scheduler.widgets.CalendarWeekGui;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
-
+import java.time.*;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Locale;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.*;
-import static javafx.scene.layout.GridPane.setColumnSpan;
-import static javafx.scene.layout.GridPane.setHalignment;
-import static javafx.scene.layout.GridPane.setHgrow;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import scheduler.models.Meeting;
 import scheduler.utilities.Constants;
 
@@ -39,8 +22,9 @@ public class CalendarWeek extends VBox {
     String[] days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     String[] minutes = new String[]{"00", "15", "30", "45"};
     GridPane grid = new GridPane();
-    Text headerText = new Text("Week of blah");
+    Text headerText = new Text("Error displaying header");
     ScrollPane scroll = new ScrollPane();
+    MeetingDetailPane meetingPane = new MeetingDetailPane();
 
     HBox header = new HBox();
     Meeting[] meetings;
@@ -51,6 +35,7 @@ public class CalendarWeek extends VBox {
         this.meetings = meetings;
         setGridAttributes();
         rebuild();
+        
 
     }
 
@@ -91,7 +76,7 @@ public class CalendarWeek extends VBox {
         scroll.setFocusTraversable(false);
         scroll.setContent(grid);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color:transparent;");
+        scroll.setStyle("-fx-background-color:transparent;");        
         this.getChildren().add(scroll);
 
     }
@@ -102,13 +87,10 @@ public class CalendarWeek extends VBox {
 
             LocalDate start = meeting.getStartDate();
 
-            System.out.println(meeting.subject + " is equal to previous monday: " + start.isEqual(getPreviousMonday()));
-            System.out.println(meeting.subject + " is after previous monday: " + start.isAfter(getPreviousMonday()));
-            System.out.println(meeting.subject + " is before next monday: " + start.isBefore(getNextMonday()));
-
+            // If start date is equalto or after the previous monday, add it to this grid
             if ((start.isEqual(getPreviousMonday()) || start.isAfter(getPreviousMonday())) && start.isBefore(getNextMonday())) {
 
-                MeetingBlock meetingBtn = new MeetingBlock(meeting);
+                MeetingBlock meetingBtn = new MeetingBlock(meeting, meetingPane);
                 meetingBtn.setPrefWidth(80); //This gets overwritten by the setmaxsize
                 meetingBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  //allow button to grow      
                 grid.add(meetingBtn, meeting.getDay(), meeting.getStartingRow(), 1, meeting.getSpan());
@@ -153,10 +135,12 @@ public class CalendarWeek extends VBox {
         buildTimeLabels();
         buildBasePane();
         buildMeetings();
+        getChildren().add(meetingPane);
 
     }
 
     private void removeAllChildren() {
+        meetingPane.displayMeeting(null);
         this.getChildren().clear();
         header.getChildren().clear();
         grid.getChildren().clear();
@@ -175,7 +159,6 @@ public class CalendarWeek extends VBox {
             grid.getColumnConstraints().add(cc);
         }
         setPadding(new Insets(15));
-        getPreviousMonday();
     }
 
     private LocalDate getPreviousMonday() {

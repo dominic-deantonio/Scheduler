@@ -11,15 +11,18 @@ public class Meeting {
     private String organizerId = "";
     private String[] attendeeIds;
 
-    public Meeting(String start, String end) {
-        startDateTime = parseDateTime(start);
-        endDateTime = parseDateTime(end);
+    public Meeting() {
     }
 
-    public Meeting(String start, String end, String subject) {
+    public Meeting(String YYYYMMDDhhmmStart, String YYYYMMDDhhmmEnd) {
+        startDateTime = parseDateTime(YYYYMMDDhhmmStart);
+        endDateTime = parseDateTime(YYYYMMDDhhmmEnd);
+    }
+
+    public Meeting(String YYYYMMDDhhmmStart, String YYYYMMDDhhmmEnd, String subject) {
         this.subject = subject;
-        startDateTime = parseDateTime(start);
-        endDateTime = parseDateTime(end);
+        startDateTime = parseDateTime(YYYYMMDDhhmmStart);
+        endDateTime = parseDateTime(YYYYMMDDhhmmEnd);
     }
 
     //NEEDS ERROR CHECKING BADLY
@@ -64,7 +67,20 @@ public class Meeting {
     }
 
     public String getDisplayInfo() {
-        return subject;
+        return subject + "\n"
+                + "\nStarts: " + startDateTime.toString()
+                + "\nEnds: " + endDateTime.toString()
+                + "\nAttendees: " + displayAttendees();
+    }
+
+    public String getButtonDisplay() {
+        return subject + "\n"
+                + startDateTime.getHour() + ":" + startDateTime.getMinute() + " to "
+                + endDateTime.getHour() + ":" + endDateTime.getMinute();
+    }
+
+    private String displayAttendees() {
+        return "Some people";
     }
 
     public int getRow(boolean start) {
