@@ -17,5 +17,6 @@ public class Constants {
     public static final Font SCENE_TITLE_FONT = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 25);
     public static final Font SUB_TITLE_FONT = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 15);
     public static final Color TEXT_ERROR_COLOR = Color.RED;
+    public static final String PANEL_STYLE = "-fx-padding: 10; -fx-border-width: 2; -fx-border-insets: 5; -fx-border-radius: 5; -fx-border-color: grey;";
 
 }

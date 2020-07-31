@@ -17,26 +17,24 @@ public class CalendarWeek extends VBox {
 
     private LocalDate dateToDisplay = LocalDate.now();
     private YearMonth yearMonth;
-    private Text weekLabel = new Text("Error"); //Ignore NetBeans, this should not be final.
+    private final Text weekLabel = new Text("Error"); //Ignore NetBeans, this should not be final.
 
     String[] days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    String[] minutes = new String[]{"00", "15", "30", "45"};
     GridPane grid = new GridPane();
     Text headerText = new Text("Error displaying header");
     ScrollPane scroll = new ScrollPane();
-    MeetingDetailPane meetingPane = new MeetingDetailPane();
+    MeetingDetail meetingDetail;
 
     HBox header = new HBox();
     Meeting[] meetings;
 
-    public CalendarWeek(Meeting[] meetings) {
-
+    public CalendarWeek(Meeting[] meetings, MeetingDetail meetingDetail) {
         headerText.setFont(Constants.SUB_TITLE_FONT);
         this.meetings = meetings;
+        this.meetingDetail = meetingDetail;
         setGridAttributes();
         rebuild();
-        
-
+        scroll.setVvalue(.3); //Give some initial scroll so user doesn't have to scroll down
     }
 
     //Add time labels to the base grid
@@ -49,26 +47,20 @@ public class CalendarWeek extends VBox {
         }
     }
 
+    //Builds the base of the grid
     private void buildBasePane() {
         //Add day labels and the quarter-hour buttons
         for (int day = 0; day < 7; day++) {
             LocalDate dateOfDay = getPreviousMonday().plusDays(day);
             String dayText = dateOfDay.getDayOfMonth() + "\n" + days[day];
             grid.add(new Text(dayText), day + 1, 0);
-            int quarterIndex = 0;
+
+            LocalDateTime blockDate = dateOfDay.atStartOfDay();
 
             for (int row = 1; row < 97; row++) {
-                int hour = (row - 1) / 4;
-                int quarter = quarterIndex;
-                QuarterHourTimeBlock block = new QuarterHourTimeBlock(hour, quarter);
-
+                QuarterHourTimeBlock block = new QuarterHourTimeBlock(blockDate, meetingDetail);
+                blockDate = blockDate.plusMinutes(15);
                 grid.add(block, day + 1, row);
-
-                if (quarterIndex < 3) {
-                    quarterIndex++;
-                } else {
-                    quarterIndex = 0;
-                }
             }
         }
 
@@ -76,8 +68,8 @@ public class CalendarWeek extends VBox {
         scroll.setFocusTraversable(false);
         scroll.setContent(grid);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color:transparent;");        
-        this.getChildren().add(scroll);
+        scroll.setStyle("-fx-background-color:transparent;");
+        getChildren().add(scroll);
 
     }
 
@@ -90,7 +82,7 @@ public class CalendarWeek extends VBox {
             // If start date is equalto or after the previous monday, add it to this grid
             if ((start.isEqual(getPreviousMonday()) || start.isAfter(getPreviousMonday())) && start.isBefore(getNextMonday())) {
 
-                MeetingBlock meetingBtn = new MeetingBlock(meeting, meetingPane);
+                MeetingBlock meetingBtn = new MeetingBlock(meeting, meetingDetail);
                 meetingBtn.setPrefWidth(80); //This gets overwritten by the setmaxsize
                 meetingBtn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  //allow button to grow      
                 grid.add(meetingBtn, meeting.getDay(), meeting.getStartingRow(), 1, meeting.getSpan());
@@ -102,6 +94,7 @@ public class CalendarWeek extends VBox {
     private void buildHeader() {
         //Set the "previous week" button
         Button prevWeekButton = new Button("<");
+        prevWeekButton.setFocusTraversable(false);
         prevWeekButton.setOnAction((ActionEvent e) -> {
             dateToDisplay = dateToDisplay.minusWeeks(1);
             rebuild();
@@ -110,6 +103,7 @@ public class CalendarWeek extends VBox {
 
         //Set the "next week" button
         Button nextWeekButton = new Button(">");
+        nextWeekButton.setFocusTraversable(false);
         nextWeekButton.setOnAction((ActionEvent e) -> {
             dateToDisplay = dateToDisplay.plusWeeks(1);
             rebuild();
@@ -120,9 +114,11 @@ public class CalendarWeek extends VBox {
         String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
         weekLabel.setText("Week of " + getPreviousMonday().getDayOfMonth() + " " + month + " " + yearMonth.getYear());
         weekLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12));
-
+        
         header.getChildren().add(weekLabel);
-        this.getChildren().add(header);
+        header.setSpacing(5);
+        header.setAlignment(Pos.CENTER_LEFT);
+        getChildren().add(header);
 
     }
 
@@ -135,12 +131,11 @@ public class CalendarWeek extends VBox {
         buildTimeLabels();
         buildBasePane();
         buildMeetings();
-        getChildren().add(meetingPane);
 
     }
 
     private void removeAllChildren() {
-        meetingPane.displayMeeting(null);
+        meetingDetail.clear();
         this.getChildren().clear();
         header.getChildren().clear();
         grid.getChildren().clear();

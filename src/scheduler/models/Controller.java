@@ -32,7 +32,7 @@ public class Controller {
         buildScenes();
         getInstance(); // Prevents attempted method calls on uninstantiated instance (was happening on first getInstance().login() method because didnt exist)
         scene = new Scene(new LoginView());
-        mainWindow.setMinHeight(500);
+        mainWindow.setMinHeight(700);
         mainWindow.setMinWidth(1100);
         mainWindow.setTitle("Super Scheduler");
         mainWindow.setScene(scene);
@@ -103,7 +103,7 @@ public class Controller {
     private User updateUserObjectData() {
         Gson gson = new Gson();
         String databaseResponse = Firebase.getInstance().getUserInfo(user.getId());
-        UserInfo data = gson.fromJson(databaseResponse, UserInfo.class);
+        UserInfo data = gson.fromJson(databaseResponse, UserInfo.class);        
         user.updateData(data);
         return user;
     }

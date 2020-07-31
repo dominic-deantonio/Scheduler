@@ -2,14 +2,15 @@ package scheduler.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Meeting {
 
     public String subject = "No subject";
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String organizerId = "";
-    private String[] attendeeIds;
+    private String organizerId = "FAKEUSERID";
+    private String[] attendees = new String[]{"skdfjhdsfkjhsd", "oiweruwoeqiru"};
 
     public Meeting() {
     }
@@ -25,7 +26,7 @@ public class Meeting {
         endDateTime = parseDateTime(YYYYMMDDhhmmEnd);
     }
 
-    //NEEDS ERROR CHECKING BADLY
+    //NEEDS ERROR CHECKING BADLY or convert to using traditional LocalDateTime parsing method
     private LocalDateTime parseDateTime(String date) {
         int year, month, dayOfMonth, hour, minute;
 
@@ -62,21 +63,28 @@ public class Meeting {
             new Meeting("202007291430", "202007291645", "Jeff Facetime meeting"),
             new Meeting("202007281700", "202007281930", "Movies with Mom"),
             new Meeting("202007302015", "202007302100", "Study Group")
-
         };
     }
 
     public String getDisplayInfo() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        String formattedStart = startDateTime.format(formatter);
+        String formattedEnd = endDateTime.format(formatter);
+
         return subject + "\n"
-                + "\nStarts: " + startDateTime.toString()
-                + "\nEnds: " + endDateTime.toString()
+                + "\nStarts:\t" + formattedStart
+                + "\nEnds:\t" + formattedEnd
                 + "\nAttendees: " + displayAttendees();
     }
 
     public String getButtonDisplay() {
-        return subject + "\n"
-                + startDateTime.getHour() + ":" + startDateTime.getMinute() + " to "
-                + endDateTime.getHour() + ":" + endDateTime.getMinute();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+        String formattedStart = startDateTime.format(formatter);
+        String formattedEnd = endDateTime.format(formatter);
+
+        String output = getSpan() > 1 ? subject + "\n" + formattedStart + " to " + formattedEnd : subject;
+        return output;
     }
 
     private String displayAttendees() {
@@ -117,6 +125,26 @@ public class Meeting {
 
     public LocalDate getStartDate() {
         return startDateTime.toLocalDate();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public LocalDate getEndDate() {
+        return endDateTime.toLocalDate();
+    }
+
+    public String[] getAttendees() {
+        return attendees;
+    }
+
+    public String getOrganizer() {
+        return organizerId;
     }
 
 }
