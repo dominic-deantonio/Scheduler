@@ -40,11 +40,13 @@ public class LoginView extends VBox {
         loginButton.setPrefWidth(WIDTH);
         loginButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");
-            deactivateElements();
+            
+            // locks out login/signup buttons on failed attempt
+//            deactivateElements();
             try {
                 Controller.getInstance().login(emailTextField.getText(), passwordField.getText());
             } catch (IOException ex) {
-                errorMessage.setText(ex.getMessage());
+                errorMessage.setText(ex.getMessage());            
             }
             reactivateElements();
         });
