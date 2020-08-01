@@ -16,6 +16,7 @@ public class Controller {
     private Parent[] sceneParents;
     private Scene scene;
     private User user;
+    UserSecurity userSec = new UserSecurity();
 
     // Private controller prevents new instances
     private Controller() {
@@ -41,12 +42,9 @@ public class Controller {
 
     // Login process. All steps should occur in this method
     public void login(String email, String password) throws IOException {
-
-        if (email.equals("") || password.equals("")) {
-            throw new IOException("You must enter an email and password.");
-        }
-        //Throw more exceptions for security, formatting, bad response from network, etc here
-        //This method needs A LOT of work before safely building the user
+        
+        UserSecurity userSec = new UserSecurity();
+        userSec.loginCheck(email, password);
 
         String jsonResponse = Firebase.getInstance().sendLoginRequest(email, password);
         user = buildUser(jsonResponse);
@@ -64,23 +62,9 @@ public class Controller {
     // Sign up method
     public void signUp(String fName, String lName, String zip, String email, String pWord, String pWord2) throws IOException {
 
-        String[] inputs = new String[]{fName, lName, zip, email, pWord, pWord2};
-        ArrayList<String> missingInputs = new ArrayList();
-        
-        //Security methods should be separated into their own classes
-        for (String input : inputs) {
-            if (input.equals("")) {
-                missingInputs.add(input);
-            }
-        }
-        if (missingInputs.size() > 0) {
-            String errorMsg = missingInputs.size() + " missing field(s) - all fields are required";
-            throw new IOException(errorMsg);
-        }
-        if (!pWord.equals(pWord2)) {
-            throw new IOException("Passwords don't match");
-        }
+        userSec.accountInputs(fName, lName, zip, email, pWord, pWord2);
 
+        
         //Throw more exceptions for security, formatting, bad response from network, etc here
         //This method needs A LOT of work before safely building the user
         String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);

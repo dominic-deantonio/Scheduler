@@ -4,12 +4,11 @@ import java.io.IOException;
 import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import scheduler.models.Controller;
-import scheduler.models.User;
+
 
 public class SignupView extends VBox {
 
@@ -22,6 +21,7 @@ public class SignupView extends VBox {
     Text errorMessage = new Text("");
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("I already have an account");
+    Label passLabel = new Label(" Note: Valid passwords must contain \nupper case, lower case, and numbers");
     int WIDTH = 200;
 
     public SignupView() {
@@ -94,7 +94,8 @@ public class SignupView extends VBox {
                 confirmPasswordField,
                 errorMessage,
                 submitButton,
-                goLoginButton
+                goLoginButton,
+                passLabel
         );
     }
 }
