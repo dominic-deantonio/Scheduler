@@ -1,6 +1,8 @@
 package scheduler.models;
 
 // This class exists so GSON can map the database response to this object GSON is limited because it can only create 
+import java.util.ArrayList;
+
 // new objects from JSON, not update existing objects. Since we have to make a call to the auth 
 // and a call to the db, this class will serve as a temporary object for GSON to map to. 
 // This object will then be passed directly to the User object where it can be consolidated
@@ -11,6 +13,7 @@ class UserInfo {
     private String firstName;
     private String lastName;
     private String email;
+    private final ArrayList<String> meetingIds = new ArrayList();
     private int zipCode;
 
     public String getFirstName() {
@@ -28,6 +31,9 @@ class UserInfo {
     public int getZipCode() {
         return zipCode;
     }
-    
+
+    public ArrayList<String> getMeetings() {
+        return meetingIds;
+    }
 
 }

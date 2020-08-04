@@ -3,7 +3,7 @@ package scheduler.models;
 import scheduler.services.Firebase;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -42,7 +42,7 @@ public class Controller {
 
     // Login process. All steps should occur in this method
     public void login(String email, String password) throws IOException {
-        
+
         UserSecurity userSec = new UserSecurity();
         userSec.loginCheck(email, password);
 
@@ -59,12 +59,16 @@ public class Controller {
         goToScene("login");
     }
 
+    public User getUser() {
+        return user;
+    }
+
     // Sign up method
     public void signUp(String fName, String lName, String zip, String email, String pWord, String pWord2) throws IOException {
 
+        userSec.emailValidation(email);
         userSec.accountInputs(fName, lName, zip, email, pWord, pWord2);
 
-        
         //Throw more exceptions for security, formatting, bad response from network, etc here
         //This method needs A LOT of work before safely building the user
         String jsonResponse = Firebase.getInstance().sendSignupRequest(fName, lName, email, zip, pWord);
@@ -87,9 +91,20 @@ public class Controller {
     private User updateUserObjectData() {
         Gson gson = new Gson();
         String databaseResponse = Firebase.getInstance().getUserInfo(user.getId());
-        UserInfo data = gson.fromJson(databaseResponse, UserInfo.class);        
+        UserInfo data = gson.fromJson(databaseResponse, UserInfo.class);
         user.updateData(data);
         return user;
+    }
+
+    //Add the meeting ID to the user account, and the actual meeting to the list of meetings
+    public String addNewMeeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject) {
+
+        // TODO: ADD SECURITY CHECKING OF USER INPUT HERE !!IMPORTANT!!        
+        Meeting mtg = new Meeting(date, startHour, startMin, endHour, endMin, organizerId, subject);
+        user = updateUserObjectData(); // Get the latest data from the database in case it changed
+        String result = Firebase.getInstance().putNewMeetingId(user, mtg);
+        result = Firebase.getInstance().putNewMeeting(mtg);
+        return result;
     }
 
     public void changePassword(String tokenId, String newPass) throws IOException {
@@ -97,7 +112,7 @@ public class Controller {
         //user = updateUserObjectData();
         System.out.println(jsonResponse);
     }
-    
+
     public void editAccountInfo(String fName, String lName, String zip, String email) throws IOException {
         String jsonResponse = Firebase.getInstance().putEditedUserData(user.getId(), fName, lName, email, zip);
         user = updateUserObjectData();

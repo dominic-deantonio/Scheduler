@@ -2,28 +2,65 @@ package scheduler.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class Meeting {
 
+    public final String id;     // ID is created on construction, no need for getter?
     public String subject = "No subject";
+    private String start;       // Format should be YYYYMMDDhhmm
+    private String end;         // Format should be YYYYMMDDhhmm
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String organizerId = "FAKEUSERID";
-    private String[] attendees = new String[]{"skdfjhdsfkjhsd", "oiweruwoeqiru"};
+    private String[] attendeeIds = new String[]{"QA6RQ46QHIVC9QYA6u7q7CkgXje2", "jeb28ERX3sexQ9g6icSDslFIUIZ2"};
 
     public Meeting() {
+        id = UUID.randomUUID().toString();
     }
 
-    public Meeting(String YYYYMMDDhhmmStart, String YYYYMMDDhhmmEnd) {
-        startDateTime = parseDateTime(YYYYMMDDhhmmStart);
-        endDateTime = parseDateTime(YYYYMMDDhhmmEnd);
+    public Meeting(String start, String end) {
+        this.start = start;
+        this.end = end;
+        id = UUID.randomUUID().toString();
+        startDateTime = parseDateTime(start);
+        endDateTime = parseDateTime(end);
     }
 
-    public Meeting(String YYYYMMDDhhmmStart, String YYYYMMDDhhmmEnd, String subject) {
+    public Meeting(String start, String end, String subject) {
+        this.start = start;
+        this.end = end;
+        id = UUID.randomUUID().toString();
         this.subject = subject;
-        startDateTime = parseDateTime(YYYYMMDDhhmmStart);
-        endDateTime = parseDateTime(YYYYMMDDhhmmEnd);
+        startDateTime = parseDateTime(start);
+        endDateTime = parseDateTime(end);
+    }
+
+    public Meeting(String start, String end, String organizerId, String subject) {
+        this.start = start;
+        this.end = end;
+        this.organizerId = organizerId;
+        this.subject = subject;
+        id = UUID.randomUUID().toString();
+        startDateTime = parseDateTime(start);
+        endDateTime = parseDateTime(end);
+    }
+
+    public Meeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject) {
+        id = UUID.randomUUID().toString();
+        this.organizerId = organizerId;
+        this.subject = subject;
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        startDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), startHour, startMin);
+        endDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), endHour, endMin);
+        this.start = startDateTime.format(formatter);
+        this.end = endDateTime.format(formatter);
+        
+        System.out.println("Start:" + this.start);
+        System.out.println("End:" + this.end);
     }
 
     //NEEDS ERROR CHECKING BADLY or convert to using traditional LocalDateTime parsing method
@@ -140,11 +177,23 @@ public class Meeting {
     }
 
     public String[] getAttendees() {
-        return attendees;
+        return attendeeIds;
     }
 
     public String getOrganizer() {
         return organizerId;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getStartString() {
+        return start;
+    }
+
+    public String getEndString() {
+        return end;
     }
 
 }
