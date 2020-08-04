@@ -125,13 +125,14 @@ public class CalendarWeek extends VBox {
     //Allows this object to rebuild all children 
     private void rebuild() {
         // current yearmonth may have been changed by the button. Update here then rebuild children
+        double currentScroll = scroll.getVvalue();
         yearMonth = YearMonth.of(dateToDisplay.getYear(), dateToDisplay.getMonth());
         removeAllChildren();
         buildHeader();
         buildTimeLabels();
         buildBasePane();
         buildMeetings();
-
+        scroll.setVvalue(currentScroll);
     }
 
     private void removeAllChildren() {

@@ -11,6 +11,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import scheduler.models.Controller;
 import scheduler.models.Meeting;
 import scheduler.utilities.Constants;
 
@@ -152,7 +153,20 @@ public class MeetingDetail extends VBox {
 
             b2.setText("Save");
             b2.setOnAction((ActionEvent e) -> {
-                System.out.println("Pretending to save the meeting");
+
+                Controller.getInstance().addNewMeeting(
+                        datePicker.getValue(),
+                        (int) startHourPicker.getValue(),
+                        Integer.parseInt(startMinPicker.getValue().toString()),
+                        (int) endHourPicker.getValue(),
+                        Integer.parseInt(endMinPicker.getValue().toString()),
+                        Controller.getInstance().getUser().getId(),
+                        subjectField.getText()
+                );
+
+                clear();
+                // Give feedback to user
+
                 // Run function which returns a new meeting to the controller for processing.
                 // When the meeting is succesfully added, return it to this object                                
                 // Run the display meeting function for the newly created meeting meeting
