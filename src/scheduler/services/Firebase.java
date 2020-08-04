@@ -133,11 +133,11 @@ public class Firebase {
     public String sendLoginRequest(String email, String password) {
         String payload = buildCredentialsPayload(email, password);
         String response = "";
-//        try {
+        try {
             response = sendRequest("POST", SIGN_IN_ENDPOINT, payload);
-//        } catch (Exception e) {
-//
-//        }
+        } catch (Exception e) {
+
+        }
         return response;
     }
 
