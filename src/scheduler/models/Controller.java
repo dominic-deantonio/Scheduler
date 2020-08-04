@@ -92,6 +92,20 @@ public class Controller {
         return user;
     }
 
+    public void changePassword(String tokenId, String newPass) throws IOException {
+        String jsonResponse = Firebase.getInstance().changePassRequest(tokenId, newPass);
+        //user = updateUserObjectData();
+        System.out.println(jsonResponse);
+    }
+    
+    public void editAccountInfo(String fName, String lName, String zip, String email) throws IOException {
+        String jsonResponse = Firebase.getInstance().putEditedUserData(user.getId(), fName, lName, email, zip);
+        user = updateUserObjectData();
+        System.out.println(jsonResponse);
+        buildScenes();
+        goToScene("dashboard");
+    }
+
     //Create all the scene nodes. Holding them in an object allows persistent data entered
     //for now, null user means user is logged out. Do not build scenes for null user.
     private void buildScenes() {

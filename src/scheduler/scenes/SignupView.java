@@ -21,7 +21,9 @@ public class SignupView extends VBox {
     Text errorMessage = new Text("");
     Button submitButton = new Button("Submit");
     Button goLoginButton = new Button("I already have an account");
-    Label passLabel = new Label(" Note: Valid passwords must contain \nupper case, lower case, and numbers");
+    Label passLabel = new Label("Note: Valid passwords must be 8 or more \n"
+                               +"characters long and contain upper case, \n"
+                               +"lower case, numbers, and special characters. \n");
     int WIDTH = 200;
 
     public SignupView() {
