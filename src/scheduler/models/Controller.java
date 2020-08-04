@@ -66,6 +66,7 @@ public class Controller {
     // Sign up method
     public void signUp(String fName, String lName, String zip, String email, String pWord, String pWord2) throws IOException {
 
+        userSec.emailValidation(email);
         userSec.accountInputs(fName, lName, zip, email, pWord, pWord2);
 
         //Throw more exceptions for security, formatting, bad response from network, etc here
