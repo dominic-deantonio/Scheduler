@@ -108,7 +108,7 @@ public class AccountView extends BorderPane {
                     button
             );
             layout.setAlignment(Pos.CENTER);
-            Scene scene = new Scene(layout, 350, 200);
+            Scene scene = new Scene(layout, 350, 275);
             popupwindow.setScene(scene);
             
             passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
