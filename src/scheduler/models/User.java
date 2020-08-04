@@ -23,7 +23,7 @@ public class User {
         return localId;
     }
 
-        public String getToken() {
+    public String getToken() {
         return idToken;
     }
     
@@ -35,6 +35,14 @@ public class User {
         return expiresIn;
     }
     
+	public String getFirstName() {
+        return firstName;
+    }
+    
+    public String getLastName() {
+        return lastName;
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

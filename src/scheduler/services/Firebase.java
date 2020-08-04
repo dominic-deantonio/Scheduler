@@ -41,6 +41,7 @@ public class Firebase {
     private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
     private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
     private final String SIGN_IN_ENDPOINT = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
+	private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT+"update?key=" + API_KEY;
 
     private HttpURLConnection connection;
 
@@ -174,6 +175,35 @@ public class Firebase {
     //Put new user data 
     public String putNewUserData(String userId, String firstName, String lastName, String email, String zip) {
         String payload = buildSignUpPayload(firstName, lastName, email, zip);
+        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + userId + ".json", payload);
+        System.out.println(response);
+        return response;
+    }
+	
+	//methods to change password
+    private String buildChangePassPayload(String tokenId, String password) {
+        return "{\"idToken\":\"" + tokenId + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
+    }
+
+    public String changePassRequest(String tokenId, String password) {
+        String response;
+        String payload = buildChangePassPayload(tokenId, password);
+        response = sendRequest("POST", SET_ACCOUNT_INFO_ENDPOINT, payload);
+        return response;
+    }
+
+    //methods to update account information
+    private String buildEditInfoPayload(String userId, String newFirst, String newLast, String newEmail, String newZip) {
+        String editUserJson = "{\"firstName\":\"" + newFirst + "\","
+                + "\"lastName\":\"" + newLast + "\","
+                + "\"email\":\"" + newEmail + "\","
+                + "\"zipCode\": \"" + newZip + "\"}";
+        return editUserJson;
+    }
+
+    //this method calls on other methods to essentially rewrite the entire user to update user-specified fields.
+    public String putEditedUserData(String userId, String firstName, String lastName, String email, String zip) {
+        String payload = buildEditInfoPayload(userId, firstName, lastName, email, zip);
         String response = sendRequest("PUT", DB_ENDPOINT + "users/" + userId + ".json", payload);
         System.out.println(response);
         return response;

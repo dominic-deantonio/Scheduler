@@ -1,19 +1,27 @@
 package scheduler.scenes;
 
+import java.io.IOException;
+
 import scheduler.widgets.*;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.geometry.Insets;
 import scheduler.models.Controller;
 import scheduler.models.User;
+import scheduler.models.UserSecurity;
+import scheduler.utilities.Constants;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+
+import javafx.event.ActionEvent; 
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.Scene; 
 import javafx.scene.control.Button; 
-import javafx.event.ActionEvent; 
-import javafx.geometry.Pos;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage; 
 
@@ -26,9 +34,15 @@ public class AccountView extends BorderPane {
     Insets insets = new Insets(15);
     final BooleanProperty firstTime = new SimpleBooleanProperty(true);
     int WIDTH = 200;
+	UserSecurity userSec = new UserSecurity();
+    Text errorMessage = new Text("");
+
     
     public AccountView(User user) {
         super();
+		
+		errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
+				
         //Set buttons' attributes
         logoutButton.setOnAction((ActionEvent e) -> {
             Controller.getInstance().logout();
@@ -56,8 +70,33 @@ public class AccountView extends BorderPane {
             popupwindow.setTitle("Password Change Request");
             Button button = new Button("Save");
             button.setOnAction(f -> {
-                firstTime.setValue(true);
-                popupwindow.close();
+                try {
+                    userSec.passwordValidation(passwordField.getText(), confirmPasswordField.getText());
+                    
+                    String newPass = passwordField.getText();
+                    String tokenId = user.getToken();
+                    
+                    Controller.getInstance().changePassword(tokenId, newPass);
+                        
+                    Stage popupwindow2 = new Stage();
+                    popupwindow2.initModality(Modality.APPLICATION_MODAL);
+                    popupwindow2.setTitle("Password Change Request");
+                    VBox layout2 = new VBox(10);
+                    Button closeButton = new Button("Close");
+                    closeButton.setOnAction((ActionEvent g) -> {
+                        popupwindow2.close();
+                    });
+                    layout2.setFillWidth(false);
+                    layout2.getChildren().addAll(new Text("You've successfully changed your password.\n"),closeButton);
+                    layout2.setAlignment(Pos.CENTER);
+                    Scene scene2 = new Scene(layout2, 350, 200);
+                    popupwindow2.setScene(scene2);
+                    popupwindow2.showAndWait();
+                    firstTime.setValue(true);
+                    popupwindow.close();
+                } catch (IOException ex) {
+                    errorMessage.setText(ex.getMessage());
+                }
             });
             VBox layout = new VBox(10);
             layout.setFillWidth(false);
@@ -65,6 +104,7 @@ public class AccountView extends BorderPane {
                     new Text("Please enter your new password below.\n"),
                     passwordField,
                     confirmPasswordField,
+					errorMessage,
                     button
             );
             layout.setAlignment(Pos.CENTER);
@@ -92,7 +132,6 @@ public class AccountView extends BorderPane {
         editInfoButton.setOnAction((ActionEvent e) -> {
             TextField firstNameField = new TextField();
             TextField lastNameField = new TextField();
-            TextField displayNameField = new TextField();
             TextField emailTextField = new TextField();
             TextField zipCodeField = new TextField();
             
@@ -100,8 +139,6 @@ public class AccountView extends BorderPane {
             firstNameField.setPrefWidth(WIDTH);
             lastNameField.setPromptText("Last name");
             lastNameField.setPrefWidth(WIDTH);
-            displayNameField.setPromptText("Display name");
-            displayNameField.setPrefWidth(WIDTH);
             zipCodeField.setPromptText("ZIP code");
             zipCodeField.setPrefWidth(WIDTH);
             emailTextField.setPromptText("Email");
@@ -113,6 +150,67 @@ public class AccountView extends BorderPane {
             popupwindow.setTitle("Edit Account Information");
             Button button = new Button("Save");
             button.setOnAction(f -> {
+                try{
+                    
+                    String newFirst;
+                    String newLast;
+                    String newEmail;
+                    String newZipCode;
+                    
+                    if(!"".equals(firstNameField.getText())){
+                        newFirst = firstNameField.getText();
+                    } else {
+                        newFirst = user.getFirstName();
+                    }
+                    
+                    if (!"".equals(lastNameField.getText())) {
+                        newLast = lastNameField.getText();
+                    } else {
+                        newLast = user.getLastName();
+                    }
+                    
+                    if (!"".equals(emailTextField.getText())) {
+                        newEmail = emailTextField.getText();
+                    } else {
+                        newEmail = user.getEmail();
+                    }
+                    
+                    if (!"".equals(zipCodeField.getText())) {
+                        newZipCode = zipCodeField.getText();
+                    } else {
+                        newZipCode = Integer.toString(user.getZipCode());
+                    }
+
+                    //method to edit information
+                    Controller.getInstance().editAccountInfo(newFirst, newLast, newZipCode, newEmail);
+                    
+                    Stage popupwindow3 = new Stage();
+                    popupwindow3.initModality(Modality.APPLICATION_MODAL);
+                    popupwindow3.setTitle("Acount Information Edited");
+                    VBox layout3 = new VBox(10);
+                    layout3.setFillWidth(false);
+                    Button closeButton = new Button("Close");
+                    closeButton.setOnAction((ActionEvent g) -> {
+                        popupwindow3.close();
+                    });
+                    layout3.getChildren().addAll(new Text("You've successfully edited your account information.\n\n"
+                            + "Your account inormation is now as follows:\n\n"
+                            + "Full name: "+newFirst+" "+newLast+"\n"
+                            + "Email: "+newEmail+"\n"
+                            + "Zipcode: "+newZipCode+"\n"),
+                            closeButton);
+                    layout3.setAlignment(Pos.CENTER);
+                    Scene scene3 = new Scene(layout3, 350, 200);
+                    popupwindow3.setScene(scene3);
+                    popupwindow3.showAndWait();
+                    
+                    firstTime.setValue(true);
+                    popupwindow.close();
+                    
+                } catch (IOException ex) {
+                    errorMessage.setText(ex.getMessage());
+                }
+                
                 firstTime.setValue(true);
                 popupwindow.close();
             });
@@ -122,7 +220,6 @@ public class AccountView extends BorderPane {
                     new Text("Please edit your information below.\n"),
                     firstNameField,
                     lastNameField,
-                    displayNameField,
                     emailTextField,
                     zipCodeField,
                     button
@@ -187,7 +284,6 @@ public class AccountView extends BorderPane {
         VBox center = new VBox();
         center.getChildren().addAll(
                 new Text("\nName: "+user.getFullName()),
-                new Text("Display Name: "+user.getDisplayName()),
                 new Text("E-mail: "+user.getEmail()),
                 new Text("Zipcode: "+user.getZipCode()+"\n"),
                 
