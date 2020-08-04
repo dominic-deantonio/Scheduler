@@ -105,6 +105,13 @@ public class Controller {
         buildScenes();
         goToScene("dashboard");
     }
+	
+	// Sends information to Firebase.java methods to delete account from authentication.
+	public void deleteAccount(String tokenId) throws IOException {
+        String jsonResponse = Firebase.getInstance().deleteAccountRequest(tokenId);
+        //user = updateUserObjectData();
+        System.out.println(jsonResponse);
+    }
 
     //Create all the scene nodes. Holding them in an object allows persistent data entered
     //for now, null user means user is logged out. Do not build scenes for null user.
