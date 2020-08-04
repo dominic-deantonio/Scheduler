@@ -5,11 +5,13 @@
  */
 package scheduler.services;
 
+import com.google.gson.Gson;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
+import scheduler.models.Meeting;
+import scheduler.models.User;
 
 //There is no need to instantiate new Firebase classes, so this is a singleton
 // See https://firebase.google.com/docs/reference/rest/database for db api
@@ -41,7 +43,7 @@ public class Firebase {
     private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
     private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
     private final String SIGN_IN_ENDPOINT = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
-	private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT+"update?key=" + API_KEY;
+    private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT + "update?key=" + API_KEY;
 
     private HttpURLConnection connection;
 
@@ -157,6 +159,17 @@ public class Firebase {
         return newUserJson;
     }
 
+    private String buildNewMeetingPayload(Meeting meeting) {
+        Gson gson = new Gson();
+        String attendeeIdsJson = gson.toJson(meeting.getAttendees());
+        String newMeetingJson = "{\"subject\":\"" + meeting.getSubject() + "\","
+                + "\"organizerId\":\"" + meeting.getOrganizer() + "\","
+                + "\"start\":\"" + meeting.getStartString() + "\","
+                + "\"end\":\"" + meeting.getEndString() + "\","
+                + "\"attendeeIds\": " + attendeeIdsJson + "}";
+        return newMeetingJson;
+    }
+
     // Query a user based on the userId
     public String getUserInfo(String userId) {
         String response = get(DB_ENDPOINT + "users/" + userId + ".json");
@@ -172,15 +185,15 @@ public class Firebase {
         return response;
     }
 
-    //Put new user data 
+    // Attempts to put user data into db
     public String putNewUserData(String userId, String firstName, String lastName, String email, String zip) {
         String payload = buildSignUpPayload(firstName, lastName, email, zip);
         String response = sendRequest("PUT", DB_ENDPOINT + "users/" + userId + ".json", payload);
         System.out.println(response);
         return response;
     }
-	
-	//methods to change password
+
+    //methods to change password
     private String buildChangePassPayload(String tokenId, String password) {
         return "{\"idToken\":\"" + tokenId + "\",\"password\":\"" + password + "\",\"returnSecureToken\":true}";
     }
@@ -208,5 +221,23 @@ public class Firebase {
         System.out.println(response);
         return response;
     }
-   
+
+    // Attempts to put meeting id into current user
+    public String putNewMeetingId(User user, Meeting meeting) {
+        ArrayList<String> meetings = user.getMeetings();
+        meetings.add(meeting.id);
+        Gson gson = new Gson();
+//        String payload = buildJsonPayloadFromArrayList(meetings);
+        String payload = gson.toJson(meetings);
+        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetingIds.json", payload);
+        return response;
+    }
+
+    public String putNewMeeting(Meeting meeting) {
+        String payload = buildNewMeetingPayload(meeting);
+        System.out.println(payload);
+        String response = sendRequest("PUT", DB_ENDPOINT + "meetings/" + meeting.id + ".json", payload);
+        return response;
+    }
+
 }
