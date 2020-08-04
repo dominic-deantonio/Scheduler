@@ -258,31 +258,8 @@ public class AccountView extends BorderPane {
                 "    -fx-background-insets: 0;\n" +
                 "    -fx-text-fill: white;");
             button.setOnAction(f -> {
-                try {
-                    String tokenId = user.getToken();
-                    
-                    Controller.getInstance().deleteAccount(tokenId);
-                        
-                    Stage popupwindow2 = new Stage();
-                    popupwindow2.initModality(Modality.APPLICATION_MODAL);
-                    popupwindow2.setTitle("Delete Account Request");
-                    VBox layout2 = new VBox(10);
-                    Button closeButton = new Button("Close");
-                    closeButton.setOnAction((ActionEvent g) -> {
-                        Controller.getInstance().logout();
-                        firstTime.setValue(true);
-                        popupwindow.close();
-                        popupwindow2.close();
-                    });
-                    layout2.setFillWidth(false);
-                    layout2.getChildren().addAll(new Text("You've successfully deleted your account.\n"),closeButton);
-                    layout2.setAlignment(Pos.CENTER);
-                    Scene scene2 = new Scene(layout2, 350, 200);
-                    popupwindow2.setScene(scene2);
-                    popupwindow2.showAndWait();
-                } catch (IOException ex) {
-                    errorMessage.setText(ex.getMessage());
-                }
+                firstTime.setValue(true);
+                popupwindow.close();
             });
             VBox layout = new VBox(10);
             layout.setFillWidth(false);
