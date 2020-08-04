@@ -44,7 +44,8 @@ public class Firebase {
     private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
     private final String SIGN_IN_ENDPOINT = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
     private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT + "update?key=" + API_KEY;
-
+    private final String DELETE_ACCOUNT_ENDPOINT = AUTH_ENDPOINT+"delete?key=" + API_KEY;
+	
     private HttpURLConnection connection;
 
     // Sends GET http requests and returns a string response
@@ -222,6 +223,18 @@ public class Firebase {
         return response;
     }
 
+	// methods to delete account -- deletes from authentication, not database.
+	private String buildDeletePayload(String tokenId) {
+        return "{\"idToken\":\"" + tokenId + "\"}";
+    }
+
+    public String deleteAccountRequest(String tokenId) {
+        String response;
+        String payload = buildDeletePayload(tokenId);
+        response = sendRequest("POST", DELETE_ACCOUNT_ENDPOINT, payload);
+        return response;
+    }
+	
     // Attempts to put meeting id into current user
     public String putNewMeetingId(User user, Meeting meeting) {
         ArrayList<String> meetings = user.getMeetings();
