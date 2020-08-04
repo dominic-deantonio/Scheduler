@@ -43,7 +43,8 @@ public class Firebase {
     private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
     private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
     private final String SIGN_IN_ENDPOINT = AUTH_ENDPOINT + "signInWithPassword?key=" + API_KEY;
-    private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT + "update?key=" + API_KEY;
+	private final String SET_ACCOUNT_INFO_ENDPOINT = AUTH_ENDPOINT + "update?key=" + API_KEY;
+  private final String DELETE_ACCOUNT_ENDPOINT = AUTH_ENDPOINT+"delete?key=" + API_KEY;
 
     private HttpURLConnection connection;
 
@@ -221,6 +222,20 @@ public class Firebase {
         System.out.println(response);
         return response;
     }
+	
+	//delete account methods -- only deletes account from authentication, not from database.
+	private String buildDeletePayload(String tokenId) {
+        return "{\"idToken\":\"" + tokenId + "\"}";
+    }
+
+    public String deleteAccountRequest(String tokenId) {
+        String response;
+        String payload = buildDeletePayload(tokenId);
+        response = sendRequest("POST", DELETE_ACCOUNT_ENDPOINT, payload);
+        return response;
+    }
+      
+}
 
     // Attempts to put meeting id into current user
     public String putNewMeetingId(User user, Meeting meeting) {
@@ -239,5 +254,4 @@ public class Firebase {
         String response = sendRequest("PUT", DB_ENDPOINT + "meetings/" + meeting.id + ".json", payload);
         return response;
     }
-
 }
