@@ -16,12 +16,11 @@ public class MyScheduleView extends BorderPane {
         super();
 
         VBox center = new VBox();
+        
         // add table here to track current appointments
+        NavigationButtons left = new NavigationButtons();
 
-        VBox left = new VBox();
-        left.getChildren().add(new NavigationButtons());
-
-        DashboardView.setMargin(left, insets);
+        DashboardView.setMargin(left, Constants.MENU_INSETS);
 
         this.setTop(new SceneHeader("My Schedule", user));
         this.setCenter(center);
