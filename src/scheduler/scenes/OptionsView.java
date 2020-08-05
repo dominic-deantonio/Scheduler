@@ -20,9 +20,9 @@ public class OptionsView extends BorderPane {
         // Filler for use later
         // Adding general navigation
         VBox left = new VBox();
-        left.getChildren().add(new NavigationButtons());
+         NavigationButtons left = new NavigationButtons();
 
-        DashboardView.setMargin(left, insets);
+        DashboardView.setMargin(left, Constants.MENU_INSETS);
 
         this.setTop(new SceneHeader("Options", user));
         this.setCenter(center);
