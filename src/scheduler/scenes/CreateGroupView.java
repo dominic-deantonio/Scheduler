@@ -1,5 +1,6 @@
 package scheduler.scenes;
 
+import scheduler.utilities.Constants;
 import scheduler.widgets.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -18,13 +19,14 @@ public class CreateGroupView extends BorderPane {
         VBox center = new VBox();
         // add table here to track current appointments
 
-        VBox left = new VBox();
-        left.getChildren().add(new NavigationButtons());
+        NavigationButtons left = new NavigationButtons();
 
-        DashboardView.setMargin(left, insets);
+        DashboardView.setMargin(left, Constants.MENU_INSETS);
 
         this.setTop(new SceneHeader("Create Groups", user));
         this.setCenter(center);
         this.setLeft(left);
+
+
     }
 }
