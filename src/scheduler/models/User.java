@@ -66,6 +66,11 @@ public class User {
         return meetings;
     }
 
+    public ArrayList<Meeting> setMeetings(ArrayList<Meeting> newMeetings) {
+        this.meetings = newMeetings;
+        return meetings;
+    }
+
     @Override
     public String toString() {
         return "firstName: " + firstName
@@ -87,7 +92,6 @@ public class User {
         zipCode = info.getZipCode();
         email = info.getEmail();            //This was already set by the auth JSON response, but no harm being uniform
         meetings = info.getMeetings();
-        meetings.forEach((id)->System.out.println(id));
         System.out.println("Received " + firstName + "'s account info.");
     }
 }

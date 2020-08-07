@@ -10,8 +10,6 @@ public class Meeting {
 
     public final String id;     // ID is created on construction, no need for getter?
     public String subject = "No subject";
-    private String start;       // Format should be YYYYMMDDhhmm
-    private String end;         // Format should be YYYYMMDDhhmm
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String organizerId = "FAKEUSERID";
@@ -29,8 +27,6 @@ public class Meeting {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         startDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), startHour, startMin);
         endDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), endHour, endMin);
-        this.start = startDateTime.format(formatter);
-        this.end = endDateTime.format(formatter);
     }
 
     public String getButtonDisplay() {
@@ -103,14 +99,6 @@ public class Meeting {
 
     public String getSubject() {
         return subject;
-    }
-
-    public String getStartString() {
-        return start;
-    }
-
-    public String getEndString() {
-        return end;
     }
 
 }

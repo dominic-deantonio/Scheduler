@@ -70,8 +70,8 @@ public class MeetingDetail extends VBox {
 
         attendeeButton.setText("Edit attendees (" + meeting.getAttendees().length + ")");
 
-        buttons = getButtons(false);
-
+        buttons = getButtons(false, meeting);
+        disableUi(true);
         display();
     }
 
@@ -91,9 +91,20 @@ public class MeetingDetail extends VBox {
 
         attendeeButton.setText("Edit attendees (0)"); // Change this to the actual number invited
 
-        buttons = getButtons(true);
+        buttons = getButtons(true, null);
+        disableUi(false);
 
         display();
+    }
+
+    private void disableUi(boolean b) {
+        subjectField.setDisable(b);
+        datePicker.setDisable(b);
+        startHourPicker.setDisable(b);
+        startMinPicker.setDisable(b);
+        endHourPicker.setDisable(b);
+        endMinPicker.setDisable(b);
+        attendeeButton.setDisable(b);
     }
 
     public void display() {
@@ -141,11 +152,19 @@ public class MeetingDetail extends VBox {
         getChildren().clear();
     }
 
-    private HBox getButtons(boolean isCreating) {
+    private HBox getButtons(boolean isCreating, Meeting meeting) {
         HBox hb = new HBox();
 
-        Button b1 = new Button("Save Changes");
-        Button b2 = new Button("Delete");
+        Button b1 = new Button("Delete");
+        b1.setOnAction((ActionEvent e) -> {
+            Controller.getInstance().deleteMeeting(meeting);
+            clear();
+        });
+
+        Button b2 = new Button("Done");
+        b2.setOnAction((ActionEvent e) -> {
+            clear();
+        });
 
         if (isCreating) {
             b1.setText("Cancel");
@@ -155,7 +174,6 @@ public class MeetingDetail extends VBox {
 
             b2.setText("Save");
             b2.setOnAction((ActionEvent e) -> {
-
                 Controller.getInstance().addNewMeeting(
                         datePicker.getValue(),
                         (int) startHourPicker.getValue(),
@@ -165,14 +183,7 @@ public class MeetingDetail extends VBox {
                         Controller.getInstance().getUser().getId(),
                         subjectField.getText()
                 );
-
                 clear();
-                // Give feedback to user
-
-                // Run function which returns a new meeting to the controller for processing.
-                // When the meeting is succesfully added, return it to this object                                
-                // Run the display meeting function for the newly created meeting meeting
-                // Refresh the weekly calendar view to include the new meeting
             });
         }
 

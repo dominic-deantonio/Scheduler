@@ -4,6 +4,7 @@ import scheduler.services.Firebase;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -104,6 +105,26 @@ public class Controller {
         return result;
     }
 
+    public String deleteMeeting(Meeting meetingToDelete) {
+        ArrayList<Meeting> meetings = user.getMeetings();
+        String msg;
+        try {
+            meetings.remove(meetingToDelete);
+            user.setMeetings(meetings);
+            Firebase.getInstance().replaceMeetings(user, meetings);
+            user = updateUserObjectData();
+            DashboardView dbView = new DashboardView(user);     // Build new dashboard using the updated user
+            sceneParents[3] = dbView;                           // Replaces old dashboard view
+            goToScene("dashboard");
+            msg = "Successful deletion. " + meetings.size() + " meetings remain after deletion";
+
+        } catch (Exception e) {
+            msg = "Failed to delete the meeting";
+            System.out.println();
+        }
+        return msg;
+    }
+
     public void changePassword(String tokenId, String newPass) throws IOException {
         String jsonResponse = Firebase.getInstance().changePassRequest(tokenId, newPass);
         System.out.println("Change password result: " + jsonResponse);
@@ -117,12 +138,12 @@ public class Controller {
         goToScene("dashboard");
     }
 
-	//method to delete account. 
-	public void deleteAccount(String tokenId) throws IOException {
+    //method to delete account. 
+    public void deleteAccount(String tokenId) throws IOException {
         String jsonResponse = Firebase.getInstance().deleteAccountRequest(tokenId);
         System.out.println(jsonResponse);
     }
-        
+
     //Create all the scene nodes. Holding them in an object allows persistent data entered
     //for now, null user means user is logged out. Do not build scenes for null user.
     private void buildScenes() {
