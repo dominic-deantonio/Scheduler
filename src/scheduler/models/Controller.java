@@ -131,9 +131,16 @@ public class Controller {
     }
 
     public void editAccountInfo(String fName, String lName, String zip, String email) throws IOException {
-        String jsonResponse = Firebase.getInstance().putEditedUserData(user.getId(), fName, lName, email, zip);
+
+        // RUN SECURITY METHODS ON THE INPUT HERE
+        // Set the new values conditionally if they are not empty
+        String newFirst = fName.equals("") ? user.getFirstName() : fName;
+        String newLast = lName.equals("") ? user.getLastName() : lName;
+        String newZipCode = zip.equals("") ? Integer.toString(user.getZipCode()) : zip;
+        String newEmail = email.equals("") ? user.getEmail() : email;
+        User editedUser = user.setEditValues(newFirst, newLast, newEmail, newZipCode);
+        String jsonResponse = Firebase.getInstance().putEditedUserData(editedUser);
         user = updateUserObjectData();
-        System.out.println(jsonResponse);
         buildScenes();
         goToScene("dashboard");
     }

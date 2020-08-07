@@ -11,7 +11,7 @@ import scheduler.utilities.Constants;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import javafx.event.ActionEvent; 
+import javafx.event.ActionEvent;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,11 +19,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.scene.Scene; 
-import javafx.scene.control.Button; 
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 
 import javafx.stage.Modality;
-import javafx.stage.Stage; 
+import javafx.stage.Stage;
 
 public class AccountView extends BorderPane {
 
@@ -34,37 +34,35 @@ public class AccountView extends BorderPane {
     Insets insets = new Insets(15);
     final BooleanProperty firstTime = new SimpleBooleanProperty(true);
     int WIDTH = 200;
-	UserSecurity userSec = new UserSecurity();
+    UserSecurity userSec = new UserSecurity();
     Text errorMessage = new Text("");
 
-    
     public AccountView(User user) {
         super();
-		
-		errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
-				
+
+        errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
+
         //Set buttons' attributes
         logoutButton.setOnAction((ActionEvent e) -> {
             Controller.getInstance().logout();
         });
-        
+
         // --- change password --------------------------------------------
-        
         //this removes the default blue highlight of the button. 
         //*note: it removes the highlight forever. it won't highlight blue if you click on it either.
-        changePasswordButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n" +
-            "    -fx-background-insets: 0, 1, 2;\n" +
-            "    -fx-background-radius: 5, 4, 3;");
-        
+        changePasswordButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n"
+                + "    -fx-background-insets: 0, 1, 2;\n"
+                + "    -fx-background-radius: 5, 4, 3;");
+
         changePasswordButton.setOnAction((ActionEvent e) -> {
             PasswordField passwordField = new PasswordField();
             PasswordField confirmPasswordField = new PasswordField();
-            
+
             passwordField.setPromptText("Password");
             passwordField.setPrefWidth(WIDTH);
             confirmPasswordField.setPromptText("Re-enter password");
             confirmPasswordField.setPrefWidth(WIDTH);
-            
+
             Stage popupwindow = new Stage();
             popupwindow.initModality(Modality.APPLICATION_MODAL);
             popupwindow.setTitle("Password Change Request");
@@ -72,12 +70,12 @@ public class AccountView extends BorderPane {
             button.setOnAction(f -> {
                 try {
                     userSec.passwordValidation(passwordField.getText(), confirmPasswordField.getText());
-                    
+
                     String newPass = passwordField.getText();
                     String tokenId = user.getToken();
-                    
+
                     Controller.getInstance().changePassword(tokenId, newPass);
-                        
+
                     Stage popupwindow2 = new Stage();
                     popupwindow2.initModality(Modality.APPLICATION_MODAL);
                     popupwindow2.setTitle("Password Change Request");
@@ -87,7 +85,7 @@ public class AccountView extends BorderPane {
                         popupwindow2.close();
                     });
                     layout2.setFillWidth(false);
-                    layout2.getChildren().addAll(new Text("You've successfully changed your password.\n"),closeButton);
+                    layout2.getChildren().addAll(new Text("You've successfully changed your password.\n"), closeButton);
                     layout2.setAlignment(Pos.CENTER);
                     Scene scene2 = new Scene(layout2, 350, 200);
                     popupwindow2.setScene(scene2);
@@ -104,37 +102,36 @@ public class AccountView extends BorderPane {
                     new Text("Please enter your new password below.\n"),
                     passwordField,
                     confirmPasswordField,
-					errorMessage,
+                    errorMessage,
                     button
             );
             layout.setAlignment(Pos.CENTER);
             Scene scene = new Scene(layout, 350, 275);
             popupwindow.setScene(scene);
-            
+
             passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-               if (newValue && firstTime.get()){
-                   layout.requestFocus();
-                   firstTime.setValue(false);
-               }
+                if (newValue && firstTime.get()) {
+                    layout.requestFocus();
+                    firstTime.setValue(false);
+                }
             });
-                        
+
             popupwindow.showAndWait();
         });
-        
+
         // --- edit information --------------------------------------------
-        
         //this removes the default blue highlight of the button. 
         //*note: it removes the highlight forever. it won't highlight blue if you click on it either.
-        editInfoButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n" +
-            "    -fx-background-insets: 0, 1, 2;\n" +
-            "    -fx-background-radius: 5, 4, 3;");
-        
+        editInfoButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n"
+                + "    -fx-background-insets: 0, 1, 2;\n"
+                + "    -fx-background-radius: 5, 4, 3;");
+
         editInfoButton.setOnAction((ActionEvent e) -> {
             TextField firstNameField = new TextField();
             TextField lastNameField = new TextField();
             TextField emailTextField = new TextField();
             TextField zipCodeField = new TextField();
-            
+
             firstNameField.setPromptText("First name");
             firstNameField.setPrefWidth(WIDTH);
             lastNameField.setPromptText("Last name");
@@ -143,47 +140,23 @@ public class AccountView extends BorderPane {
             zipCodeField.setPrefWidth(WIDTH);
             emailTextField.setPromptText("Email");
             emailTextField.setPrefWidth(WIDTH);
-            
+
             //creating popup window for editting account info
             Stage popupwindow = new Stage();
             popupwindow.initModality(Modality.APPLICATION_MODAL);
             popupwindow.setTitle("Edit Account Information");
             Button button = new Button("Save");
             button.setOnAction(f -> {
-                try{
-                    
-                    String newFirst;
-                    String newLast;
-                    String newEmail;
-                    String newZipCode;
-                    
-                    if(!"".equals(firstNameField.getText())){
-                        newFirst = firstNameField.getText();
-                    } else {
-                        newFirst = user.getFirstName();
-                    }
-                    
-                    if (!"".equals(lastNameField.getText())) {
-                        newLast = lastNameField.getText();
-                    } else {
-                        newLast = user.getLastName();
-                    }
-                    
-                    if (!"".equals(emailTextField.getText())) {
-                        newEmail = emailTextField.getText();
-                    } else {
-                        newEmail = user.getEmail();
-                    }
-                    
-                    if (!"".equals(zipCodeField.getText())) {
-                        newZipCode = zipCodeField.getText();
-                    } else {
-                        newZipCode = Integer.toString(user.getZipCode());
-                    }
+                try {
 
-                    //method to edit information
-                    Controller.getInstance().editAccountInfo(newFirst, newLast, newZipCode, newEmail);
-                    
+                    //method to edit user information
+                    Controller.getInstance().editAccountInfo(
+                            firstNameField.getText(),
+                            lastNameField.getText(),
+                            zipCodeField.getText(),
+                            emailTextField.getText()
+                    );
+
                     Stage popupwindow3 = new Stage();
                     popupwindow3.initModality(Modality.APPLICATION_MODAL);
                     popupwindow3.setTitle("Acount Information Edited");
@@ -194,23 +167,24 @@ public class AccountView extends BorderPane {
                         popupwindow3.close();
                     });
                     layout3.getChildren().addAll(new Text("You've successfully edited your account information.\n\n"
-                            + "Your account inormation is now as follows:\n\n"
-                            + "Full name: "+newFirst+" "+newLast+"\n"
-                            + "Email: "+newEmail+"\n"
-                            + "Zipcode: "+newZipCode+"\n"),
-                            closeButton);
+                            + "Your account information is now as follows:\n\n"
+                            + "Full name: " + user.getFirstName() + " " + user.getLastName() + "\n"
+                            + "Email: " + user.getEmail() + "\n"
+                            + "Zipcode: " + user.getZipCode() + "\n"),
+                            closeButton
+                    );
                     layout3.setAlignment(Pos.CENTER);
                     Scene scene3 = new Scene(layout3, 350, 200);
                     popupwindow3.setScene(scene3);
                     popupwindow3.showAndWait();
-                    
+
                     firstTime.setValue(true);
                     popupwindow.close();
-                    
+
                 } catch (IOException ex) {
                     errorMessage.setText(ex.getMessage());
                 }
-                
+
                 firstTime.setValue(true);
                 popupwindow.close();
             });
@@ -227,42 +201,39 @@ public class AccountView extends BorderPane {
             layout.setAlignment(Pos.CENTER);
             Scene scene = new Scene(layout, 350, 300);
             popupwindow.setScene(scene);
-            
 
             firstNameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-               if (newValue && firstTime.get()){
-                   layout.requestFocus();
-                   firstTime.setValue(false);
-               }
+                if (newValue && firstTime.get()) {
+                    layout.requestFocus();
+                    firstTime.setValue(false);
+                }
             });
             popupwindow.showAndWait();
         });
-        
-        
+
         // --- delete account --------------------------------------------
-        
         //this removes the default blue highlight of the button. 
         //*note: it removes the highlight forever. it won't highlight blue if you click on it either.
-        deleteAccountButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n" +
-            "    -fx-background-insets: 0, 1, 2;\n" +
-            "    -fx-background-radius: 5, 4, 3;");
-        
+        deleteAccountButton.setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color; \n"
+                + "    -fx-background-insets: 0, 1, 2;\n"
+                + "    -fx-background-radius: 5, 4, 3;");
+
         deleteAccountButton.setOnAction((ActionEvent e) -> {
             //creating popup window for editting account info
             Stage popupwindow = new Stage();
             popupwindow.initModality(Modality.APPLICATION_MODAL);
             popupwindow.setTitle("Delete Account");
             Button button = new Button("Delete Account");
-            button.setStyle("-fx-background-color: linear-gradient(#ff5400, #be1d00);\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-background-insets: 0;\n" +
-                "    -fx-text-fill: white;");
+            button.setStyle("-fx-background-color: linear-gradient(#ff5400, #be1d00);\n"
+                    + "    -fx-font-weight: bold;\n"
+                    + "    -fx-background-insets: 0;\n"
+                    + "    -fx-text-fill: white;");
             button.setOnAction(f -> {
                 try {
                     String tokenId = user.getToken();
-                    
+
                     Controller.getInstance().deleteAccount(tokenId);
-                        
+
                     Stage popupwindow2 = new Stage();
                     popupwindow2.initModality(Modality.APPLICATION_MODAL);
                     popupwindow2.setTitle("Delete Account Request");
@@ -275,7 +246,7 @@ public class AccountView extends BorderPane {
                         popupwindow2.close();
                     });
                     layout2.setFillWidth(false);
-                    layout2.getChildren().addAll(new Text("You've successfully deleted your account.\n"),closeButton);
+                    layout2.getChildren().addAll(new Text("You've successfully deleted your account.\n"), closeButton);
                     layout2.setAlignment(Pos.CENTER);
                     Scene scene2 = new Scene(layout2, 350, 200);
                     popupwindow2.setScene(scene2);
@@ -306,16 +277,13 @@ public class AccountView extends BorderPane {
         //Create the center node and children
         VBox center = new VBox();
         center.getChildren().addAll(
-                new Text("\nName: "+user.getFullName()),
-                new Text("E-mail: "+user.getEmail()),
-                new Text("Zipcode: "+user.getZipCode()+"\n"),
-                
+                new Text("\nName: " + user.getFullName()),
+                new Text("E-mail: " + user.getEmail()),
+                new Text("Zipcode: " + user.getZipCode() + "\n"),
                 new Text("Would you like to edit your personal information?"),
-                editInfoButton, 
-                
+                editInfoButton,
                 new Text("\nWould you like to change your password?"),
                 changePasswordButton,
-                
                 new Text("\nWould you like to delete your account?"),
                 deleteAccountButton
         );

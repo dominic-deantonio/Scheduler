@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Meeting {
 
     public final String id;     // ID is created on construction, no need for getter?
-    public String subject = "No subject";
+    private String subject = "No subject";
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String organizerId = "FAKEUSERID";

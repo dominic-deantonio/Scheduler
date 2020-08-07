@@ -5,7 +5,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -56,7 +59,7 @@ public class MeetingDetail extends VBox {
         String organizer = meeting.getOrganizer().equals(userId) ? "You organized this meeting" : "Organized by " + userId;
         organizerLabel.setText(organizer);
 
-        subjectField.setText(meeting.subject);
+        subjectField.setText(meeting.getSubject());
 
         datePicker.setValue(meeting.getStartDate());
 
@@ -157,8 +160,12 @@ public class MeetingDetail extends VBox {
 
         Button b1 = new Button("Delete");
         b1.setOnAction((ActionEvent e) -> {
-            Controller.getInstance().deleteMeeting(meeting);
-            clear();
+            Alert alert = new Alert(AlertType.CONFIRMATION, "Delete " + meeting.getSubject() + "?", ButtonType.YES, ButtonType.CANCEL);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.YES) {
+                Controller.getInstance().deleteMeeting(meeting);
+                clear();
+            }
         });
 
         Button b2 = new Button("Done");

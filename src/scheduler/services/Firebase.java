@@ -189,31 +189,18 @@ public class Firebase {
         return response;
     }
 
-    //methods to update account information
-    private String buildEditInfoPayload(String userId, String newFirst, String newLast, String newEmail, String newZip) {
-        String editUserJson = "{\"firstName\":\"" + newFirst + "\","
-                + "\"lastName\":\"" + newLast + "\","
-                + "\"email\":\"" + newEmail + "\","
-                + "\"zipCode\": \"" + newZip + "\"}";
-        return editUserJson;
-    }
-
     //this method calls on other methods to essentially rewrite the entire user to update user-specified fields.
-    public String putEditedUserData(String userId, String firstName, String lastName, String email, String zip) {
-        String payload = buildEditInfoPayload(userId, firstName, lastName, email, zip);
-        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + userId + ".json", payload);
+    public String putEditedUserData(User user) {
+        Gson gson = new Gson();
+        String payload = gson.toJson(user);
+        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + ".json", payload);
         System.out.println(response);
         return response;
     }
 
-    // methods to delete account -- deletes from authentication, not database.
-    private String buildDeletePayload(String tokenId) {
-        return "{\"idToken\":\"" + tokenId + "\"}";
-    }
-
     public String deleteAccountRequest(String tokenId) {
         String response;
-        String payload = buildDeletePayload(tokenId);
+        String payload = "{\"idToken\":\"" + tokenId + "\"}";
         response = sendRequest("POST", DELETE_ACCOUNT_ENDPOINT, payload);
         return response;
     }
@@ -229,7 +216,7 @@ public class Firebase {
     }
 
     //Replaces the meetings with the provided arraylist
-    public String replaceMeetings(User user, ArrayList<Meeting> meetings) {        
+    public String replaceMeetings(User user, ArrayList<Meeting> meetings) {
         String payload = new Gson().toJson(meetings);
         String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetings.json", payload);
         return response;

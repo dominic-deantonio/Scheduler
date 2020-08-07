@@ -10,12 +10,9 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private String kind;
     private String localId;                                         //the user id. use this to reference this user in the database
-    private String displayName;                                     //this field doesn't need to be used, but does need to exist
     private String idToken;                                         //maybe used for security? not sure - 
-    private ArrayList<Meeting> meetings = new ArrayList<>();         //list of meetings
-    private int expiresIn;                                          //perhaps how long the idToken lasts?
+    private ArrayList<Meeting> meetings = new ArrayList<>();        //list of meetings
     private int zipCode;
 
     public String getEmail() {
@@ -30,14 +27,6 @@ public class User {
         return idToken;
     }
 
-    public String getKind() {
-        return kind;
-    }
-
-    public int getExpires() {
-        return expiresIn;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -48,14 +37,6 @@ public class User {
 
     public String getFullName() {
         return firstName + " " + lastName;
-    }
-
-    public String getDisplayName() {
-        if (!"".equals(displayName)) {
-            return displayName;
-        } else {
-            return "You have not specified a display name.";
-        }
     }
 
     public int getZipCode() {
@@ -71,16 +52,21 @@ public class User {
         return meetings;
     }
 
+    // Make sure the values were checked before passing into here
+    public User setEditValues(String fName, String lName, String email, String zip) {
+        firstName = fName;
+        lastName = lName;
+        this.email = email;
+        zipCode = Integer.parseInt(zip);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "firstName: " + firstName
                 + "\nlastName: " + lastName
                 + "\nemail: " + email
-                + "\nkind: " + kind
                 + "\nlocalId: " + localId
-                + "\ndisplayName: " + displayName
-                //                + "\nidToken: " + idToken         //omitted from toString because so long
-                + "\nexpiresIn: " + expiresIn
                 + "\nzipCode: " + zipCode;
     }
 
