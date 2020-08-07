@@ -3,6 +3,7 @@ package scheduler.widgets.CalendarWeekGui;
 import java.time.*;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Locale;
 import javafx.event.ActionEvent;
 import javafx.geometry.*;
@@ -26,9 +27,9 @@ public class CalendarWeek extends VBox {
     MeetingDetail meetingDetail;
 
     HBox header = new HBox();
-    Meeting[] meetings;
+    ArrayList<Meeting> meetings;
 
-    public CalendarWeek(Meeting[] meetings, MeetingDetail meetingDetail) {
+    public CalendarWeek(ArrayList<Meeting> meetings, MeetingDetail meetingDetail) {
         headerText.setFont(Constants.SUB_TITLE_FONT);
         this.meetings = meetings;
         this.meetingDetail = meetingDetail;

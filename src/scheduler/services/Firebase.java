@@ -33,12 +33,6 @@ public class Firebase {
     //Class variables - might remove many if not necessary
     //Some of these values like api key should not be saved in the app itself. Major security risk
     private final String API_KEY = "AIzaSyDAEG_Ynr-ewIov3Au1YUlR9breoQhXFHQ";
-    private final String AUTH_DOMAIN = "scheduler-cmsc.firebaseapp.com";
-    private final String PROJECT_ID = "scheduler-cmsc";
-    private final String STORAGE_BUCKET = "scheduler-cmsc.appspot.com";
-    private final String MESSAGING_SENDER_ID = "176621522738";
-    private final String APP_ID = "1:176621522738:web:ae75cf4dccb07b9a86112b";
-    private final String MEASUREMENT_ID = "G-H2P33184SZ";
     private final String DB_ENDPOINT = "https://scheduler-cmsc.firebaseio.com/";
     private final String AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1/accounts:";
     private final String SIGN_UP_ENDPOINT = AUTH_ENDPOINT + "signUp?key=" + API_KEY;
@@ -159,17 +153,6 @@ public class Firebase {
         return newUserJson;
     }
 
-    private String buildNewMeetingPayload(Meeting meeting) {
-        Gson gson = new Gson();
-        String attendeeIdsJson = gson.toJson(meeting.getAttendees());
-        String newMeetingJson = "{\"subject\":\"" + meeting.getSubject() + "\","
-                + "\"organizerId\":\"" + meeting.getOrganizer() + "\","
-                + "\"start\":\"" + meeting.getStartString() + "\","
-                + "\"end\":\"" + meeting.getEndString() + "\","
-                + "\"attendeeIds\": " + attendeeIdsJson + "}";
-        return newMeetingJson;
-    }
-
     // Query a user based on the userId
     public String getUserInfo(String userId) {
         String response = get(DB_ENDPOINT + "users/" + userId + ".json");
@@ -222,22 +205,13 @@ public class Firebase {
         return response;
     }
 
-    // Attempts to put meeting id into current user
-    public String putNewMeetingId(User user, Meeting meeting) {
-        ArrayList<String> meetings = user.getMeetings();
-        meetings.add(meeting.id);
+    // Attempts to put meeting into current user
+    public String putNewMeeting(User user, Meeting meeting) {
+        ArrayList<Meeting> meetings = user.getMeetings();
+        meetings.add(meeting);
         Gson gson = new Gson();
-//        String payload = buildJsonPayloadFromArrayList(meetings);
         String payload = gson.toJson(meetings);
-        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetingIds.json", payload);
+        String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetings.json", payload);
         return response;
     }
-
-    public String putNewMeeting(Meeting meeting) {
-        String payload = buildNewMeetingPayload(meeting);
-        System.out.println(payload);
-        String response = sendRequest("PUT", DB_ENDPOINT + "meetings/" + meeting.id + ".json", payload);
-        return response;
-    }
-
 }

@@ -33,7 +33,7 @@ public class Controller {
         buildScenes();
         getInstance(); // Prevents attempted method calls on uninstantiated instance (was happening on first getInstance().login() method because didnt exist)
         scene = new Scene(new LoginView());
-        mainWindow.setMinHeight(700);
+        mainWindow.setMinHeight(750);
         mainWindow.setMinWidth(1100);
         mainWindow.setTitle("Super Scheduler");
         mainWindow.setScene(scene);
@@ -59,10 +59,6 @@ public class Controller {
         goToScene("login");
     }
 
-    public User getUser() {
-        return user;
-    }
-
     // Sign up method
     public void signUp(String fName, String lName, String zip, String email, String pWord, String pWord2) throws IOException {
 
@@ -75,7 +71,6 @@ public class Controller {
         user = buildUser(jsonResponse);
         jsonResponse = Firebase.getInstance().putNewUserData(user.getId(), fName, lName, email, zip);
         user = updateUserObjectData();
-        System.out.println(jsonResponse);
         buildScenes();
         goToScene("dashboard");
     }
@@ -102,15 +97,16 @@ public class Controller {
         // TODO: ADD SECURITY CHECKING OF USER INPUT HERE !!IMPORTANT!!        
         Meeting mtg = new Meeting(date, startHour, startMin, endHour, endMin, organizerId, subject);
         user = updateUserObjectData(); // Get the latest data from the database in case it changed
-        String result = Firebase.getInstance().putNewMeetingId(user, mtg);
-        result = Firebase.getInstance().putNewMeeting(mtg);
+        String result = Firebase.getInstance().putNewMeeting(user, mtg);
+        DashboardView dbView = new DashboardView(user);     // Build new dashboard using the updated user
+        sceneParents[3] = dbView;                           // Replaces old dashboard view
+        goToScene("dashboard");
         return result;
     }
 
     public void changePassword(String tokenId, String newPass) throws IOException {
         String jsonResponse = Firebase.getInstance().changePassRequest(tokenId, newPass);
-        //user = updateUserObjectData();
-        System.out.println(jsonResponse);
+        System.out.println("Change password result: " + jsonResponse);
     }
 
     public void editAccountInfo(String fName, String lName, String zip, String email) throws IOException {
@@ -182,5 +178,9 @@ public class Controller {
                 System.out.println("There was an error going to \'" + sceneName + "\'. Is it spelled correctly?");
                 break;
         }
+    }
+
+    public User getUser() {
+        return user;
     }
 }

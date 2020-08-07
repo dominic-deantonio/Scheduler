@@ -52,7 +52,9 @@ public class MeetingDetail extends VBox {
 
     public void displayMeeting(Meeting meeting) {
         titleLabel.setText("Meeting");
-        organizerLabel.setText("Organized by " + meeting.getOrganizer());
+        String userId = Controller.getInstance().getUser().getId();
+        String organizer = meeting.getOrganizer().equals(userId) ? "You organized this meeting" : "Organized by " + userId;
+        organizerLabel.setText(organizer);
 
         subjectField.setText(meeting.subject);
 
