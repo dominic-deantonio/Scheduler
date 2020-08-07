@@ -21,33 +21,6 @@ public class Meeting {
         id = UUID.randomUUID().toString();
     }
 
-    public Meeting(String start, String end) {
-        this.start = start;
-        this.end = end;
-        id = UUID.randomUUID().toString();
-        startDateTime = parseDateTime(start);
-        endDateTime = parseDateTime(end);
-    }
-
-    public Meeting(String start, String end, String subject) {
-        this.start = start;
-        this.end = end;
-        id = UUID.randomUUID().toString();
-        this.subject = subject;
-        startDateTime = parseDateTime(start);
-        endDateTime = parseDateTime(end);
-    }
-
-    public Meeting(String start, String end, String organizerId, String subject) {
-        this.start = start;
-        this.end = end;
-        this.organizerId = organizerId;
-        this.subject = subject;
-        id = UUID.randomUUID().toString();
-        startDateTime = parseDateTime(start);
-        endDateTime = parseDateTime(end);
-    }
-
     public Meeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject) {
         id = UUID.randomUUID().toString();
         this.organizerId = organizerId;
@@ -58,60 +31,6 @@ public class Meeting {
         endDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), endHour, endMin);
         this.start = startDateTime.format(formatter);
         this.end = endDateTime.format(formatter);
-        
-        System.out.println("Start:" + this.start);
-        System.out.println("End:" + this.end);
-    }
-
-    //NEEDS ERROR CHECKING BADLY or convert to using traditional LocalDateTime parsing method
-    private LocalDateTime parseDateTime(String date) {
-        int year, month, dayOfMonth, hour, minute;
-
-        //Get the year value
-        String num = date.substring(0, 4);
-        year = Integer.valueOf(num);
-
-        //Get the month value
-        num = date.substring(4, 6);
-        month = Integer.valueOf(num);
-
-        //Get the day value
-        num = date.substring(6, 8);
-        dayOfMonth = Integer.valueOf(num);
-
-        //Get the hour value
-        num = date.substring(8, 10);
-        hour = Integer.valueOf(num);
-
-        //Get the minute value
-        num = date.substring(10, 12);
-        minute = Integer.valueOf(num);
-
-        return LocalDateTime.of(year, month, dayOfMonth, hour, minute);
-
-    }
-
-    public static Meeting[] getMockAppointments() {
-        return new Meeting[]{
-            new Meeting("202007270730", "202007270800", "Dental Appointment"),
-            new Meeting("202007280800", "202007280900", "Gym - leg day"),
-            new Meeting("202007270915", "202007271030", "Doctor's office"),
-            new Meeting("202007281045", "202007281215", "Lunch Meeting"),
-            new Meeting("202007291430", "202007291645", "Jeff Facetime meeting"),
-            new Meeting("202007281700", "202007281930", "Movies with Mom"),
-            new Meeting("202007302015", "202007302100", "Study Group")
-        };
-    }
-
-    public String getDisplayInfo() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
-        String formattedStart = startDateTime.format(formatter);
-        String formattedEnd = endDateTime.format(formatter);
-
-        return subject + "\n"
-                + "\nStarts:\t" + formattedStart
-                + "\nEnds:\t" + formattedEnd
-                + "\nAttendees: " + displayAttendees();
     }
 
     public String getButtonDisplay() {
@@ -124,10 +43,7 @@ public class Meeting {
         return output;
     }
 
-    private String displayAttendees() {
-        return "Some people";
-    }
-
+    // Gets the Y value for the grid placement based on 15 min intervals
     public int getRow(boolean start) {
 
         LocalDateTime dateTimeToUse = start ? startDateTime : endDateTime;
@@ -153,6 +69,7 @@ public class Meeting {
         return getRow(true);
     }
 
+    // The row span for this meeting based on the duration
     public int getSpan() {
         int startRow = getRow(true);
         int endRow = getRow(false);

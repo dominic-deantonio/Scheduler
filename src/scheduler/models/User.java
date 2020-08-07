@@ -14,7 +14,7 @@ public class User {
     private String localId;                                         //the user id. use this to reference this user in the database
     private String displayName;                                     //this field doesn't need to be used, but does need to exist
     private String idToken;                                         //maybe used for security? not sure - 
-    private ArrayList<String> meetingIds = new ArrayList<>();       //list of meeting IDs
+    private ArrayList<Meeting> meetings = new ArrayList<>();         //list of meetings
     private int expiresIn;                                          //perhaps how long the idToken lasts?
     private int zipCode;
 
@@ -62,8 +62,8 @@ public class User {
         return zipCode;
     }
 
-    public ArrayList<String> getMeetings() {
-        return meetingIds;
+    public ArrayList<Meeting> getMeetings() {
+        return meetings;
     }
 
     @Override
@@ -86,7 +86,8 @@ public class User {
         lastName = info.getLastName();
         zipCode = info.getZipCode();
         email = info.getEmail();            //This was already set by the auth JSON response, but no harm being uniform
-        meetingIds = info.getMeetings();
+        meetings = info.getMeetings();
+        meetings.forEach((id)->System.out.println(id));
         System.out.println("Received " + firstName + "'s account info.");
     }
 }

@@ -13,7 +13,7 @@ class UserInfo {
     private String firstName;
     private String lastName;
     private String email;
-    private final ArrayList<String> meetingIds = new ArrayList();
+    private final ArrayList<Meeting> meetings = new ArrayList();
     private int zipCode;
 
     public String getFirstName() {
@@ -32,8 +32,8 @@ class UserInfo {
         return zipCode;
     }
 
-    public ArrayList<String> getMeetings() {
-        return meetingIds;
+    public ArrayList<Meeting> getMeetings() {
+        return meetings;
     }
 
 }
