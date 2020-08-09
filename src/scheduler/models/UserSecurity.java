@@ -56,6 +56,25 @@ public class UserSecurity {
         passwordValidation(pWord, pWord2);
 
     }
+    
+    public void updateAccountInputs(String fName, String lName, String zip, String email) throws IOException {
+
+        String[] inputs = new String[]{fName, lName, zip, email};
+        ArrayList<String> missingInputs = new ArrayList();
+
+        for (String input : inputs) {
+            if (input.equals("")) {
+                missingInputs.add(input);
+            }
+        }
+        if (missingInputs.size() > 0) {
+            String errorMsg = missingInputs.size() + " missing field(s) - all fields are required";
+            throw new IOException(errorMsg);
+        }
+
+        emailValidation(email);
+
+    }
 
     // validates user password to meet application requirements
     public void passwordValidation(String pWord, String pWord2) throws IOException {
