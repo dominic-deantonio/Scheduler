@@ -148,7 +148,10 @@ public class AccountView extends BorderPane {
             Button button = new Button("Save");
             button.setOnAction(f -> {
                 try {
-                    userSec.emailValidation(emailTextField.getText());
+                    userSec.updateAccountInputs(firstNameField.getText(),
+                                                lastNameField.getText(),
+                                                zipCodeField.getText(),
+                                                emailTextField.getText());
                     
                     //method to edit user information
                     Controller.getInstance().editAccountInfo(
