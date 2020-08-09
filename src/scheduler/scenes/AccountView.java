@@ -140,7 +140,7 @@ public class AccountView extends BorderPane {
             zipCodeField.setPrefWidth(WIDTH);
             emailTextField.setPromptText("Email");
             emailTextField.setPrefWidth(WIDTH);
-
+            
             //creating popup window for editting account info
             Stage popupwindow = new Stage();
             popupwindow.initModality(Modality.APPLICATION_MODAL);
@@ -148,7 +148,8 @@ public class AccountView extends BorderPane {
             Button button = new Button("Save");
             button.setOnAction(f -> {
                 try {
-
+                    userSec.emailValidation(emailTextField.getText());
+                    
                     //method to edit user information
                     Controller.getInstance().editAccountInfo(
                             firstNameField.getText(),
@@ -183,6 +184,7 @@ public class AccountView extends BorderPane {
 
                 } catch (IOException ex) {
                     errorMessage.setText(ex.getMessage());
+                    popupwindow.showAndWait();
                 }
 
                 firstTime.setValue(true);
@@ -196,6 +198,7 @@ public class AccountView extends BorderPane {
                     lastNameField,
                     emailTextField,
                     zipCodeField,
+                    errorMessage,
                     button
             );
             layout.setAlignment(Pos.CENTER);
