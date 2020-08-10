@@ -9,8 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import scheduler.scenes.*;
-import scheduler.widgets.AttendeeManager;
-import scheduler.widgets.CalendarWeekGui.MeetingDetail;
+import scheduler.widgets.Inviter;
+import scheduler.widgets.MeetingDetail;
 
 // This is the central class to control the flow of the application
 public class Controller {
@@ -95,11 +95,11 @@ public class Controller {
     }
 
     //Add the meeting ID to the user account, and the actual meeting to the list of meetings
-    public String addNewMeeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject) {
+    public String addNewMeeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject, ArrayList<String> attendees) {
 
         // TODO: ADD SECURITY CHECKING OF USER INPUT HERE !!IMPORTANT!!        
-        Meeting mtg = new Meeting(date, startHour, startMin, endHour, endMin, organizerId, subject);
-        user = updateUserObjectData(); // Get the latest data from the database in case it changed
+        Meeting mtg = new Meeting(date, startHour, startMin, endHour, endMin, organizerId, subject, attendees);
+        user = updateUserObjectData(); // Get the latest data from the database in case it changed        
         String result = Firebase.getInstance().putNewMeeting(user, mtg);
         DashboardView dashView = new DashboardView(user);     // Build new dashboard using the updated user
         sceneParents[3] = dashView;                           // Replaces old dashboard view
@@ -211,37 +211,37 @@ public class Controller {
         ids.forEach((id) -> {
             String response = Firebase.getInstance().getUserById(id);
             User contact = gson.fromJson(response, User.class);
-            System.out.println("Mapped " + contact.getFullName() + " - number of meetings: " + contact.getMeetings().size());
             contacts.add(contact);
         });
+        System.out.println("Fetched " + contacts.size() + " of " + ids.size() + " users");
 
     }
 
     public void openAttendeeManagement(MeetingDetail meetingPanel) {
         // Doesn't check the database if entries already exist.
-        // Should 
         if (contacts.size() < 1) {
             populateContacts();
         }
-        AttendeeManager attendeeManager = new AttendeeManager(meetingPanel);
+        Inviter attendeeManager = new Inviter(meetingPanel);
         attendeeManager.show();
 
     }
 
+    // Search all the attendees by making everything lowercase and searching within name and emails
     public ArrayList<User> searchAttendees(String search) {
         ArrayList<User> found = new ArrayList();
-        if (search.length() > 1) {
-            contacts.forEach((c) -> {
-                if (c.getEmail().contains(search) || c.getFullName().contains(search)) {
-                    if (!found.contains(c)) {
-                        found.add(c);
-                    }
+        String lower = search.toLowerCase();
+        contacts.forEach((c) -> {
+            String zip = c.getZipCode() + "";
+            if (c.getEmail().toLowerCase().contains(lower) || c.getFullName().contains(lower) || zip.contains(lower)) {
+                if (!found.contains(c)) {
+                    found.add(c);
                 }
-            });
-        }
-        
+            }
+        });
+
         return found;
     }
-    
+
     // you were creating a search algorithnm
 }

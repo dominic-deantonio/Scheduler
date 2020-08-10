@@ -1,4 +1,4 @@
-package scheduler.widgets.CalendarWeekGui;
+package scheduler.widgets;
 
 import java.time.LocalDateTime;
 import javafx.geometry.Pos;

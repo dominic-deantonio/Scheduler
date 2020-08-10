@@ -1,4 +1,4 @@
-package scheduler.widgets.CalendarWeekGui;
+package scheduler.widgets;
 
 import java.time.*;
 import java.time.format.TextStyle;
@@ -115,7 +115,7 @@ public class CalendarWeek extends VBox {
         String month = yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
         weekLabel.setText("Week of " + getPreviousMonday().getDayOfMonth() + " " + month + " " + yearMonth.getYear());
         weekLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12));
-        
+
         header.getChildren().add(weekLabel);
         header.setSpacing(5);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -158,9 +158,14 @@ public class CalendarWeek extends VBox {
         setPadding(new Insets(15));
     }
 
+    // If today is not monday, gets the previous monday to display as week start
     private LocalDate getPreviousMonday() {
-        LocalDate monday = dateToDisplay.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
-        return monday;
+        if (dateToDisplay.getDayOfWeek() != DayOfWeek.MONDAY) {
+            LocalDate prevMonday = dateToDisplay.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+            return prevMonday;
+        } else {
+            return dateToDisplay;
+        }
     }
 
     private LocalDate getNextMonday() {

@@ -1,4 +1,4 @@
-package scheduler.widgets.CalendarWeekGui;
+package scheduler.widgets;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ public class MeetingDetail extends VBox {
 
     //Meeting fields
     TextField subjectField = new TextField();
-    DatePicker datePicker = new DatePicker();
+    public DatePicker datePicker = new DatePicker();
 
     HBox startTime = new HBox();
     ComboBox startHourPicker = new ComboBox();
@@ -38,9 +38,8 @@ public class MeetingDetail extends VBox {
     ComboBox endMinPicker = new ComboBox();
 
     Button attendeeButton = new Button("View Attendees");
+    public ArrayList<User> attendeesToAdd = new ArrayList();
     HBox buttons = new HBox();
-    
-    ArrayList<User> attendees = new ArrayList();
 
     public MeetingDetail() {
         setStyle(Constants.PANEL_STYLE);
@@ -79,7 +78,7 @@ public class MeetingDetail extends VBox {
         endHourPicker.setValue(meeting.getEndDateTime().getHour());
         endMinPicker.setValue(meeting.getEndDateTime().format(formatter));
 
-        attendeeButton.setText(meeting.getAttendees().length + " attendee(s)");
+        attendeeButton.setText(meeting.getAttendees().size() + " attendee(s)");
 
         buttons = getButtons(false, meeting);
         disableUi(true);
@@ -189,6 +188,14 @@ public class MeetingDetail extends VBox {
 
             b2.setText("Save");
             b2.setOnAction((ActionEvent e) -> {
+
+                ArrayList<String> attendeeIDs = new ArrayList();
+                attendeesToAdd.forEach((attendee) -> {
+                    attendeeIDs.add(attendee.getId());
+                    System.out.println(attendee.getId());
+                });
+                System.out.println("Num attendees: "+  attendeesToAdd.size());
+
                 Controller.getInstance().addNewMeeting(
                         datePicker.getValue(),
                         (int) startHourPicker.getValue(),
@@ -196,7 +203,8 @@ public class MeetingDetail extends VBox {
                         (int) endHourPicker.getValue(),
                         Integer.parseInt(endMinPicker.getValue().toString()),
                         Controller.getInstance().getUser().getId(),
-                        subjectField.getText()
+                        subjectField.getText(),
+                        attendeeIDs
                 );
                 clear();
             });
@@ -221,9 +229,5 @@ public class MeetingDetail extends VBox {
         startTime.getChildren().addAll(startHourPicker, new Text(" : "), startMinPicker);
         endTime.getChildren().addAll(endHourPicker, new Text(" : "), endMinPicker);
 
-    }
-    
-    public void setAttendees(ArrayList<User> attendees){
-        this.attendees = attendees;
     }
 }

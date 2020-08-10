@@ -212,6 +212,11 @@ public class Firebase {
         Gson gson = new Gson();
         String payload = gson.toJson(meetings);
         String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetings.json", payload);
+
+//        meeting.getAttendees().forEach((attendee) -> {
+//            sendRequest("PUT", DB_ENDPOINT + "users/" + attendee + "/meetings.json", payload);
+//        });
+
         return response;
     }
 

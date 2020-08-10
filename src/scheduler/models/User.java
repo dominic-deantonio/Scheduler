@@ -1,6 +1,8 @@
 package scheduler.models;
 
 //Simple class to represent a user
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class User {
@@ -79,5 +81,37 @@ public class User {
         email = info.getEmail();            //This was already set by the auth JSON response, but no harm being uniform
         meetings = info.getMeetings();
         System.out.println("Received " + firstName + "'s account info.");
+    }
+
+    public boolean[] buildSelectedDayAvailability(LocalDate selectedDay) {
+
+        // Create a new boolean array and set all to true (true means available)
+        boolean[] available = new boolean[96];
+        for (int i = 0; i < 96; i++) {
+            available[i] = true;
+        }
+
+        // Get a list of meetings for today
+        ArrayList<Meeting> todaysMeetings = new ArrayList();
+        meetings.forEach((m) -> {
+            if (m.getStartDate().isEqual(selectedDay)) {
+                todaysMeetings.add(m);
+            }
+        });
+
+        // Start at midnight and if any meeting is at or during
+        LocalDateTime currentTimeToday = LocalDateTime.of(selectedDay.getYear(), selectedDay.getMonth().getValue(), selectedDay.getDayOfMonth(), 00, 00);
+        for (int i = 0; i < 96; i++) {
+            for (Meeting meeting : todaysMeetings) {
+                boolean meetingStartsNow = meeting.getStartDateTime().isEqual(currentTimeToday);
+                boolean meetingIsDuring = meeting.getStartDateTime().isBefore(currentTimeToday) && meeting.getEndDateTime().isAfter(currentTimeToday);
+                if (meetingStartsNow || meetingIsDuring) {
+                    available[i] = false;
+                    break;
+                }
+            }
+            currentTimeToday = currentTimeToday.plusMinutes(15);
+        }
+        return available;
     }
 }

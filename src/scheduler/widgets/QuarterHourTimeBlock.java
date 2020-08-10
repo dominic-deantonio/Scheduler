@@ -1,4 +1,4 @@
-package scheduler.widgets.CalendarWeekGui;
+package scheduler.widgets;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;

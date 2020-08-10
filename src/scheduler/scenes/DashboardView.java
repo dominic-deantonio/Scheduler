@@ -1,13 +1,13 @@
 package scheduler.scenes;
 
-import scheduler.widgets.CalendarWeekGui.CalendarWeek;
+import scheduler.widgets.CalendarWeek;
 import scheduler.widgets.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 import scheduler.models.Controller;
 import scheduler.models.Meeting;
 import scheduler.models.User;
-import scheduler.widgets.CalendarWeekGui.MeetingDetail;
+import scheduler.widgets.MeetingDetail;
 
 public class DashboardView extends BorderPane {
 

@@ -3,6 +3,7 @@ package scheduler.models;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Meeting {
@@ -11,18 +12,19 @@ public class Meeting {
     private String subject = "No subject";
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String organizerId = "FAKEUSERID";    
-    private String[] attendeeIds = new String[]{"QA6RQ46QHIVC9QYA6u7q7CkgXje2", "jeb28ERX3sexQ9g6icSDslFIUIZ2"};
+    private String organizerId = "FAKEUSERID";
+    private ArrayList<String> attendeeIds = new ArrayList();
 
     public Meeting() {
         id = UUID.randomUUID().toString();
     }
 
-    public Meeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject) {
+    public Meeting(LocalDate date, int startHour, int startMin, int endHour, int endMin, String organizerId, String subject, ArrayList<String> attendees) {
         id = UUID.randomUUID().toString();
         this.organizerId = organizerId;
         this.subject = subject;
-        
+        this.attendeeIds = attendees;
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         startDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), startHour, startMin);
         endDateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDayOfMonth(), endHour, endMin);
@@ -88,7 +90,7 @@ public class Meeting {
         return endDateTime.toLocalDate();
     }
 
-    public String[] getAttendees() {
+    public ArrayList<String> getAttendees() {
         return attendeeIds;
     }
 
