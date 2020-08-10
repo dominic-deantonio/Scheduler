@@ -187,7 +187,7 @@ public class AccountView extends BorderPane {
 
                 } catch (IOException ex) {
                     errorMessage.setText(ex.getMessage());
-                    popupwindow.showAndWait();
+//                    popupwindow.showAndWait();
                 }
 
                 firstTime.setValue(true);

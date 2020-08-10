@@ -23,15 +23,15 @@ public class UserSecurity {
             throw new IOException("Please enter an email account");
         }
     }
-    
-    public void emailValidation(String email) throws IOException{
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + 
-                            "[a-zA-Z0-9_+&*-]+)*@" + 
-                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
-                            "A-Z]{2,7}$";
+
+    public void emailValidation(String email) throws IOException {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+                + "[a-zA-Z0-9_+&*-]+)*@"
+                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+                + "A-Z]{2,7}$";
         Pattern emailPattern = Pattern.compile(emailRegex);
-        
-        if (!emailPattern.matcher(email).find()){
+
+        if (!emailPattern.matcher(email).find()) {
             throw new IOException("Invalid email format");
         }
     }
@@ -56,7 +56,7 @@ public class UserSecurity {
         passwordValidation(pWord, pWord2);
 
     }
-    
+
     public void updateAccountInputs(String fName, String lName, String zip, String email) throws IOException {
 
         String[] inputs = new String[]{fName, lName, zip, email};
@@ -83,7 +83,7 @@ public class UserSecurity {
         Pattern UpperCasePattern = Pattern.compile("[A-Z]");
         Pattern lowerCasePattern = Pattern.compile("[a-z]");
         Pattern digitCasePattern = Pattern.compile("[0-9]");
-        
+
         String errorString = "The following errors were found:\n";
         StringBuffer sb = new StringBuffer(errorString);
 

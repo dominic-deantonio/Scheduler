@@ -221,4 +221,35 @@ public class Firebase {
         String response = sendRequest("PUT", DB_ENDPOINT + "users/" + user.getId() + "/meetings.json", payload);
         return response;
     }
+
+    // Was having trouble mapping the JSON response to a user object, so getting a list of users first, then will fetch each user
+    public ArrayList<String> getContacts() {
+        String response = get(DB_ENDPOINT + "users.json?shallow=true&print=pretty");
+        ArrayList<String> output = new ArrayList();
+        boolean open = false;
+
+        // Adds each string inside quote to the list
+        String current = "";
+        for (int i = 0; i < response.length(); i++) {
+            if (response.charAt(i) == '\"') {
+                open = !open;
+                if (open == false) {
+                    output.add(current);
+                    current = "";
+                }
+                continue;
+            }
+
+            if (open) {
+                current += response.charAt(i);
+            }
+        }
+
+        return output;
+    }
+
+    public String getUserById(String id) {
+        String response = get(DB_ENDPOINT + "users/" + id + ".json");
+        return response;
+    }
 }

@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import scheduler.scenes.*;
+import scheduler.widgets.AttendeeManager;
+import scheduler.widgets.CalendarWeekGui.MeetingDetail;
 
 // This is the central class to control the flow of the application
 public class Controller {
@@ -18,6 +20,7 @@ public class Controller {
     private Scene scene;
     private User user;
     UserSecurity userSec = new UserSecurity();
+    private ArrayList<User> contacts = new ArrayList();
 
     // Private controller prevents new instances
     private Controller() {
@@ -41,12 +44,11 @@ public class Controller {
         mainWindow.show();
     }
 
-    // Login process. All steps should occur in this method
+    // Login process. All login steps should occur in this method
     public void login(String email, String password) throws IOException {
 
         UserSecurity userSec = new UserSecurity();
         userSec.loginCheck(email, password);
-
         String jsonResponse = Firebase.getInstance().sendLoginRequest(email, password);
         user = buildUser(jsonResponse);
         user = updateUserObjectData();
@@ -99,8 +101,8 @@ public class Controller {
         Meeting mtg = new Meeting(date, startHour, startMin, endHour, endMin, organizerId, subject);
         user = updateUserObjectData(); // Get the latest data from the database in case it changed
         String result = Firebase.getInstance().putNewMeeting(user, mtg);
-        DashboardView dbView = new DashboardView(user);     // Build new dashboard using the updated user
-        sceneParents[3] = dbView;                           // Replaces old dashboard view
+        DashboardView dashView = new DashboardView(user);     // Build new dashboard using the updated user
+        sceneParents[3] = dashView;                           // Replaces old dashboard view
         goToScene("dashboard");
         return result;
     }
@@ -139,7 +141,7 @@ public class Controller {
         String newZipCode = zip.equals("") ? Integer.toString(user.getZipCode()) : zip;
         String newEmail = email.equals("") ? user.getEmail() : email;
         User editedUser = user.setEditValues(newFirst, newLast, newEmail, newZipCode);
-        String jsonResponse = Firebase.getInstance().putEditedUserData(editedUser);
+        Firebase.getInstance().putEditedUserData(editedUser);
         user = updateUserObjectData();
         buildScenes();
         goToScene("dashboard");
@@ -201,4 +203,45 @@ public class Controller {
     public User getUser() {
         return user;
     }
+
+    void populateContacts() {
+        ArrayList<String> ids = Firebase.getInstance().getContacts();
+        Gson gson = new Gson();
+
+        ids.forEach((id) -> {
+            String response = Firebase.getInstance().getUserById(id);
+            User contact = gson.fromJson(response, User.class);
+            System.out.println("Mapped " + contact.getFullName() + " - number of meetings: " + contact.getMeetings().size());
+            contacts.add(contact);
+        });
+
+    }
+
+    public void openAttendeeManagement(MeetingDetail meetingPanel) {
+        // Doesn't check the database if entries already exist.
+        // Should 
+        if (contacts.size() < 1) {
+            populateContacts();
+        }
+        AttendeeManager attendeeManager = new AttendeeManager(meetingPanel);
+        attendeeManager.show();
+
+    }
+
+    public ArrayList<User> searchAttendees(String search) {
+        ArrayList<User> found = new ArrayList();
+        if (search.length() > 1) {
+            contacts.forEach((c) -> {
+                if (c.getEmail().contains(search) || c.getFullName().contains(search)) {
+                    if (!found.contains(c)) {
+                        found.add(c);
+                    }
+                }
+            });
+        }
+        
+        return found;
+    }
+    
+    // you were creating a search algorithnm
 }

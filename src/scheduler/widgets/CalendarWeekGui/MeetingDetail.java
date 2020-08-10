@@ -3,6 +3,7 @@ package scheduler.widgets.CalendarWeekGui;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -16,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import scheduler.models.Controller;
 import scheduler.models.Meeting;
+import scheduler.models.User;
 import scheduler.utilities.Constants;
 
 public class MeetingDetail extends VBox {
@@ -37,6 +39,8 @@ public class MeetingDetail extends VBox {
 
     Button attendeeButton = new Button("View Attendees");
     HBox buttons = new HBox();
+    
+    ArrayList<User> attendees = new ArrayList();
 
     public MeetingDetail() {
         setStyle(Constants.PANEL_STYLE);
@@ -46,6 +50,10 @@ public class MeetingDetail extends VBox {
         setSpacing(5);
 
         buildTimePickers();
+
+        attendeeButton.setOnAction((a) -> {
+            Controller.getInstance().openAttendeeManagement(this);
+        });
 
         titleLabel.setFont(Constants.SUB_TITLE_FONT);
 
@@ -71,7 +79,7 @@ public class MeetingDetail extends VBox {
         endHourPicker.setValue(meeting.getEndDateTime().getHour());
         endMinPicker.setValue(meeting.getEndDateTime().format(formatter));
 
-        attendeeButton.setText("Edit attendees (" + meeting.getAttendees().length + ")");
+        attendeeButton.setText(meeting.getAttendees().length + " attendee(s)");
 
         buttons = getButtons(false, meeting);
         disableUi(true);
@@ -92,7 +100,7 @@ public class MeetingDetail extends VBox {
         endHourPicker.setValue(time.plusMinutes(15).getHour());
         endMinPicker.setValue(time.plusMinutes(15).format(formatter));
 
-        attendeeButton.setText("Edit attendees (0)"); // Change this to the actual number invited
+        attendeeButton.setText("Attendees"); // Change this to the actual number invited
 
         buttons = getButtons(true, null);
         disableUi(false);
@@ -213,5 +221,9 @@ public class MeetingDetail extends VBox {
         startTime.getChildren().addAll(startHourPicker, new Text(" : "), startMinPicker);
         endTime.getChildren().addAll(endHourPicker, new Text(" : "), endMinPicker);
 
+    }
+    
+    public void setAttendees(ArrayList<User> attendees){
+        this.attendees = attendees;
     }
 }

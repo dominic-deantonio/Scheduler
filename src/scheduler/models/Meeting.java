@@ -2,7 +2,6 @@ package scheduler.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -12,7 +11,7 @@ public class Meeting {
     private String subject = "No subject";
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private String organizerId = "FAKEUSERID";
+    private String organizerId = "FAKEUSERID";    
     private String[] attendeeIds = new String[]{"QA6RQ46QHIVC9QYA6u7q7CkgXje2", "jeb28ERX3sexQ9g6icSDslFIUIZ2"};
 
     public Meeting() {

@@ -42,13 +42,11 @@ public class LoginView extends VBox {
             errorMessage.setText("");
             
             // locks out login/signup buttons on failed attempt
-//            deactivateElements();
             try {
                 Controller.getInstance().login(emailTextField.getText(), passwordField.getText());
             } catch (IOException ex) {
                 errorMessage.setText(ex.getMessage());            
             }
-            reactivateElements();
         });
 
         //Sign up button
@@ -72,13 +70,11 @@ public class LoginView extends VBox {
         devLoginButton.setPrefWidth(WIDTH);
         devLoginButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");
-            deactivateElements();
             try {
-                Controller.getInstance().login("test@test.com", "654321");
+                Controller.getInstance().login("test@test.com", "654321aaAA@@");
             } catch (IOException ex) {
                 errorMessage.setText(ex.getMessage());
             }
-            reactivateElements();
         });
 
         //Set the VBox
@@ -95,22 +91,5 @@ public class LoginView extends VBox {
                 new Text("\n"),
                 forgotButton
         );
-    }
-
-    //Don't allow interaction while scene is processing (prevent double login attempts before first finishes)
-    private void deactivateElements() {
-        emailTextField.setEditable(false);
-        passwordField.setEditable(false);
-        loginButton.setVisible(false);
-        signupButton.setVisible(false);
-        forgotButton.setVisible(false);
-    }
-
-    private void reactivateElements() {
-        emailTextField.setEditable(true);
-        passwordField.setEditable(true);
-        loginButton.setVisible(true);
-        signupButton.setVisible(true);
-        forgotButton.setVisible(true);
     }
 }
