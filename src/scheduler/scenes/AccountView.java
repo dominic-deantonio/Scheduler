@@ -163,7 +163,7 @@ public class AccountView extends BorderPane {
 
                     Stage popupwindow3 = new Stage();
                     popupwindow3.initModality(Modality.APPLICATION_MODAL);
-                    popupwindow3.setTitle("Acount Information Edited");
+                    popupwindow3.setTitle("Account Information Edited");
                     VBox layout3 = new VBox(10);
                     layout3.setFillWidth(false);
                     Button closeButton = new Button("Close");

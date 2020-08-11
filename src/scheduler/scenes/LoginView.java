@@ -18,7 +18,6 @@ public class LoginView extends VBox {
     TextField emailTextField = new TextField();
     PasswordField passwordField = new PasswordField();
     Button loginButton = new Button("Log in");
-    Button devLoginButton = new Button("Dev log in");
     Button signupButton = new Button("Sign up");
     Text forgotButton = new Text("Forgot password?");
     Text errorMessage = new Text("");
@@ -65,18 +64,6 @@ public class LoginView extends VBox {
         //Set up the error text
         errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
 
-        //Dev login button - delete this on final submission and for error checking
-        devLoginButton.setStyle("-fx-base: #FB8C00;");
-        devLoginButton.setPrefWidth(WIDTH);
-        devLoginButton.setOnAction((ActionEvent e) -> {
-            errorMessage.setText("");
-            try {
-                Controller.getInstance().login("test@test.com", "654321aaAA@@");
-            } catch (IOException ex) {
-                errorMessage.setText(ex.getMessage());
-            }
-        });
-
         //Set the VBox
         this.setFillWidth(false);
         this.setAlignment(Pos.CENTER);
@@ -87,7 +74,6 @@ public class LoginView extends VBox {
                 errorMessage,
                 loginButton,
                 signupButton,
-                devLoginButton,
                 new Text("\n"),
                 forgotButton
         );
