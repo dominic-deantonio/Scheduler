@@ -1,9 +1,6 @@
 package scheduler.scenes;
 
-import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import scheduler.utilities.Constants;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -11,8 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import scheduler.models.Controller;
-import scheduler.models.User;
-import scheduler.services.Firebase;
 
 
 public class SignupView extends VBox {
@@ -30,8 +25,7 @@ public class SignupView extends VBox {
                                +"characters long and contain upper case, \n"
                                +"lower case, numbers, and special characters. \n");
     int WIDTH = 200;
-    boolean hasAccount;
-    
+
     public SignupView() {
         super(5);
 
@@ -67,43 +61,19 @@ public class SignupView extends VBox {
         submitButton.setPrefWidth(WIDTH);
         submitButton.setOnAction((ActionEvent e) -> {
             errorMessage.setText("");
-            String inputEmail = emailTextField.getText();
-            System.out.println(inputEmail);
-            
-            ArrayList<String> ids = new ArrayList();
-            ids = Firebase.getInstance().getContacts();
-            Gson gson = new Gson();
-            
-            Iterator idsIt = ids.iterator();
-            while (idsIt.hasNext()) {
-                String id = (String) idsIt.next();
-                String response = Firebase.getInstance().getUserById(id);
-                User user = gson.fromJson(response, User.class);
-                String userEmail = user.getEmail();
-                
-                if (userEmail.equals(inputEmail)) {
-                    hasAccount = true;
-                    errorMessage.setFill(Constants.TEXT_ERROR_COLOR);
-                    errorMessage.setText("The email account you entered already has a Super Scheduler account.");
-                    break; //end while loop because email match has been found. user cannot signup.
-                } else { 
-                    hasAccount = false; 
-                } //end else
-            }//end while idsIt.hasNext()
-            
-            if (hasAccount == false) {
-                try {
-                    Controller.getInstance().signUp(
+//            deactivateElements();
+            try {
+                Controller.getInstance().signUp(
                         firstNameField.getText(),
                         lastNameField.getText(),
                         zipCodeField.getText(),
                         emailTextField.getText(),
                         passwordField.getText(),
                         confirmPasswordField.getText());
-		} catch (IOException ex) {
-                    errorMessage.setText(ex.getMessage());
-		}//end try-catch
-            }//end if hasAccount == false
+            } catch (IOException ex) {
+                errorMessage.setText(ex.getMessage());
+            }
+//            reactivateElements();
 
         });
 
