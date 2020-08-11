@@ -1,3 +1,12 @@
 Manifest-Version: 1.0
+Implementation-Title: Scheduler
 X-COMMENT: Main-Class will be added automatically by build
+Implementation-Version: 1.0
+Permissions: sandbox
+Codebase: *
+JavaFX-Version: 8.0
+Class-Path: lib/gson-2.8.6.jar
+Created-By: JavaFX Packager
+Implementation-Vendor: CMSC Team One
+Main-Class: scheduler.App
 
